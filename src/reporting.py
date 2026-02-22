@@ -1,44 +1,65 @@
 import pandas as pd
-import json
-import logging
-from .validation import (calculate_sharpe, calculate_max_drawdown, 
-                        run_t_test, bootstrap_test, calculate_ic, edge_decay_analysis)
+import numpy as np
 
-logger = logging.getLogger(__name__)
-
-def generate_performance_summary(trades_df: pd.DataFrame, capital_series: pd.Series, cost_assumption=0.04):
-    """Calculate overall metrics for the backtest."""
+def generate_performance_summary(trades_df, final_capital, initial_capital=10000):
+    """Calculate metrics for binary prediction markets"""
+    
     if len(trades_df) == 0:
-        return {"error": "No trades executed."}
-        
-    total_trades = len(trades_df)
-    wins = len(trades_df[trades_df['outcome'] == 'WIN'])
-    losses = total_trades - wins
-    win_rate = wins / total_trades if total_trades > 0 else 0
+        return {
+            'total_trades': 0,
+            'win_rate': 0,
+            'sharpe_ratio': 0,
+            'total_pnl': 0,
+            'max_drawdown': 0,
+            'p_value': 1.0
+        }
     
+    # Core metrics
+    win_rate = trades_df['win'].mean()
     total_pnl = trades_df['pnl'].sum()
-    gross_profit = trades_df[trades_df['pnl'] > 0]['pnl'].sum()
-    gross_loss = abs(trades_df[trades_df['pnl'] < 0]['pnl'].sum())
+    total_return = (final_capital - initial_capital) / initial_capital
     
-    profit_factor = gross_profit / gross_loss if gross_loss != 0 else float('inf')
+    # Returns per trade for Sharpe
+    avg_investment = 102  # $100 + 2% spread
+    returns = trades_df['pnl'] / avg_investment
     
-    sharpe = calculate_sharpe(trades_df['pnl'])
-    max_dd = calculate_max_drawdown(capital_series)
+    # Sharpe ratio (annualized for 96 markets/day)
+    if returns.std() > 0:
+        sharpe = returns.mean() / returns.std() * np.sqrt(252 * 96)
+    else:
+        sharpe = 0
     
-    p_value = run_t_test(trades_df)
-    ci_lower, ci_upper = bootstrap_test(trades_df)
-    ic = calculate_ic(trades_df)
+    # Maximum drawdown
+    cumulative_pnl = trades_df['pnl'].cumsum()
+    running_max = cumulative_pnl.cummax()
+    drawdown = cumulative_pnl - running_max
+    max_drawdown = drawdown.min()
+    max_drawdown_pct = max_drawdown / initial_capital * 100
+    
+    # Statistical significance (t-test)
+    from scipy import stats
+    if len(returns) >= 2:
+        t_stat, p_value = stats.ttest_1samp(returns, 0)
+    else:
+        p_value = 1.0
+    
+    # Profit factor
+    gross_profit = trades_df[trades_df['win']]['pnl'].sum()
+    gross_loss = abs(trades_df[~trades_df['win']]['pnl'].sum())
+    profit_factor = gross_profit / gross_loss if gross_loss > 0 else np.inf
     
     return {
-        "total_trades": total_trades,
-        "win_rate": win_rate,
-        "total_pnl": total_pnl,
-        "profit_factor": profit_factor,
-        "sharpe_ratio": sharpe,
-        "max_drawdown": max_dd,
-        "t_test_p_value": p_value,
-        "bootstrap_ci_95": [ci_lower, ci_upper],
-        "information_coefficient": ic
+        'total_trades': len(trades_df),
+        'win_rate': win_rate,
+        'total_pnl': total_pnl,
+        'total_return_pct': total_return * 100,
+        'sharpe_ratio': sharpe,
+        'max_drawdown': max_drawdown,
+        'max_drawdown_pct': max_drawdown_pct,
+        'profit_factor': profit_factor,
+        'p_value': p_value,
+        'avg_win': trades_df[trades_df['win']]['pnl'].mean() if trades_df['win'].any() else 0,
+        'avg_loss': trades_df[~trades_df['win']]['pnl'].mean() if (~trades_df['win']).any() else 0
     }
 
 def print_executive_summary(summary, title="BACKTEST RESULTS"):
@@ -48,13 +69,14 @@ def print_executive_summary(summary, title="BACKTEST RESULTS"):
     print(f"Total Trades : {summary.get('total_trades', 0)}")
     print(f"Win Rate     : {summary.get('win_rate', 0)*100:.2f}%")
     print(f"Total PnL    : ${summary.get('total_pnl', 0):.2f}")
+    if 'total_return_pct' in summary:
+        print(f"Total Return : {summary['total_return_pct']:.2f}%")
     print(f"Profit Factor: {summary.get('profit_factor', 0):.2f}")
     print(f"Sharpe Ratio : {summary.get('sharpe_ratio', 0):.2f}")
-    print(f"Max Drawdown : {summary.get('max_drawdown', 0)*100:.2f}%")
+    print(f"Max Drawdown : {summary.get('max_drawdown', 0):.2f} ({summary.get('max_drawdown_pct', 0):.2f}%)")
     print("-" * 60)
     print("Edge Validation:")
-    print(f"T-test p-val : {summary.get('t_test_p_value', 1.0):.5f}")
-    ci = summary.get('bootstrap_ci_95', [0,0])
-    print(f"95% CI (PnL) : ${ci[0]:.2f} to ${ci[1]:.2f} per trade")
-    print(f"Info Coeff   : {summary.get('information_coefficient', 0):.4f}")
+    print(f"T-test p-val : {summary.get('p_value', 1.0):.5f}")
+    print(f"Avg Win      : ${summary.get('avg_win', 0):.2f}")
+    print(f"Avg Loss     : ${summary.get('avg_loss', 0):.2f}")
     print("=" * 60)

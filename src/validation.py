@@ -59,40 +59,29 @@ def calculate_max_drawdown(equity_curve: pd.Series):
     return drawdown.min()
 
 def assign_regimes(df: pd.DataFrame):
-    """Classify Each 15-Min Window Volatility, Trend, and Time regimes."""
+    """Assign volatility and trend regimes to 15m candles"""
+    from src.indicators import calculate_atr, calculate_adx
+    import numpy as np
     
-    # Volatility Regime
-    # Classify Each 15-Min Window Volatility, Trend, and Time regimes.
-    # Note: rolling quantile can still be slow on 1M rows. To speed it up, we could approximate,
-    # but let's use pandas rolling quantile which is usually optimized.
-    rolling_80 = df['atr'].rolling(1000).quantile(0.8)
-    rolling_20 = df['atr'].rolling(1000).quantile(0.2)
+    # ATR for volatility on 15m bars
+    df['atr'] = calculate_atr(df['high'], df['low'], df['close'], period=14)
     
-    conditions_vol = [
-        (df['atr'] > rolling_80),
-        (df['atr'] < rolling_20)
-    ]
-    choices_vol = ['High Vol', 'Low Vol']
-    df['regime_vol'] = np.select(conditions_vol, choices_vol, default='Medium Vol')
+    # ADX for trend strength on 15m bars
+    adx, _, _ = calculate_adx(df['high'], df['low'], df['close'], period=14)
+    df['adx'] = adx
     
-    # Trend Regime
-    conditions_trend = [
-        (df['adx'] > 25) & (df['plus_di'] > df['minus_di']),
-        (df['adx'] > 25) & (df['plus_di'] < df['minus_di'])
-    ]
-    choices_trend = ['Strong Uptrend', 'Strong Downtrend']
-    df['regime_trend'] = np.select(conditions_trend, choices_trend, default='Ranging')
+    # Calculate percentiles for volatility regime
+    atr_20 = df['atr'].quantile(0.20)
+    atr_80 = df['atr'].quantile(0.80)
     
-    # Time Regime
-    conditions_time = [
-        (df['hour'] >= 13) & (df['hour'] < 20),
-        (df['hour'] >= 0) & (df['hour'] < 8)
-    ]
-    choices_time = ['US Market Hours', 'Asia Hours']
-    df['regime_time'] = np.select(conditions_time, choices_time, default='Europe/Other Hours')
+    df['regime_vol'] = pd.cut(df['atr'], 
+                              bins=[0, atr_20, atr_80, np.inf],
+                              labels=['Low', 'Medium', 'High'])
     
-    # Weekend
-    df['is_weekend'] = np.where(df['day_of_week'] >= 5, 'Weekend', 'Weekday')
+    # Trend regime based on ADX
+    df['regime_trend'] = df['adx'].apply(
+        lambda x: 'Strong' if x > 25 else 'Weak'
+    )
     
     return df
 

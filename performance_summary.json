@@ -1,0 +1,13 @@
+{
+    "total_trades": 20379,
+    "win_rate": 0.561411256685804,
+    "total_pnl": 163778.0,
+    "total_return_pct": 1637.78,
+    "sharpe_ratio": 12.852054402529888,
+    "max_drawdown": -3558.0,
+    "max_drawdown_pct": -35.58,
+    "profit_factor": 1.1796449615872306,
+    "p_value": 5.21365127056435e-32,
+    "avg_win": 94.0,
+    "avg_loss": -102.0
+}

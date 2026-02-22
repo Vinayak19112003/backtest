@@ -1,3 +1,17 @@
+"""
+Polymarket BTC 15m Backtest - Using 15-minute Candles
+
+Strategy Logic:
+1. Each 15m candle represents one Polymarket market window
+2. Signal checked at candle CLOSE (market boundary)
+3. Outcome determined by NEXT candle close (15 min later)
+4. RSI(43/58) + Bollinger Bands(20, 1.2 SD) on 15m closes
+5. Binary PnL: Win +$94, Loss -$102 (includes 2% spread + 2% fee)
+
+Example:
+  Candle 1 (10:00-10:15): Close $60,000, RSI=42, < BB_lower → BUY YES
+  Candle 2 (10:15-10:30): Close $60,100 → UP → WIN
+"""
 import pandas as pd
 import numpy as np
 import logging
@@ -8,9 +22,9 @@ import sys
 # Ensure src in pythonpath
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from src.data_loader import load_and_prep_data
+from src.data_loader import load_data
 from src.engine import run_backtest
-from src.validation import assign_regimes, edge_decay_analysis
+from src.validation import assign_regimes
 from src.reporting import generate_performance_summary, print_executive_summary
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -23,7 +37,7 @@ def main():
         return
         
     # 1. Data load and preprocessing
-    df = load_and_prep_data(data_path)
+    df = load_data(data_path)
     df = assign_regimes(df)
     
     # Generate splits
@@ -44,7 +58,7 @@ def main():
         return
         
     trades_df.to_csv('trades.csv', index=False)
-    summary = generate_performance_summary(trades_df, trades_df['capital_after'])
+    summary = generate_performance_summary(trades_df, final_capital)
     
     with open('performance_summary.json', 'w') as f:
         json.dump(summary, f, indent=4)
@@ -54,9 +68,9 @@ def main():
     # 3. Train / Val / Test Splits
     print("\n=== Train / Val / Test Performance ===")
     for name, split_df in [("Train", train_df), ("Val", val_df), ("Test", test_df)]:
-        t, _ = run_backtest(split_df)
+        t, final_cap = run_backtest(split_df)
         if len(t) > 0:
-            s_split = generate_performance_summary(t, t['capital_after'])
+            s_split = generate_performance_summary(t, final_cap)
             print(f"[{name}] Trades: {len(t):4d} | Win Rate: {s_split['win_rate']*100:.2f}% | Sharpe: {s_split['sharpe_ratio']:.2f} | PnL: ${s_split['total_pnl']:.2f}")
         else:
             print(f"[{name}] No trades generated.")
@@ -67,7 +81,7 @@ def main():
     vol_stats = trades_df.groupby('regime_vol').apply(
         lambda x: pd.Series({
             'Trades': len(x),
-            'WinRate': len(x[x['outcome']=='WIN'])/len(x) if len(x)>0 else 0,
+            'WinRate': len(x[x['win']]) / len(x) if len(x) > 0 else 0,
             'TotalPnL': x['pnl'].sum()
         })
     )
@@ -77,7 +91,7 @@ def main():
     trend_stats = trades_df.groupby('regime_trend').apply(
         lambda x: pd.Series({
             'Trades': len(x),
-            'WinRate': len(x[x['outcome']=='WIN'])/len(x) if len(x)>0 else 0,
+            'WinRate': len(x[x['win']]) / len(x) if len(x) > 0 else 0,
             'TotalPnL': x['pnl'].sum()
         })
     )
@@ -87,18 +101,18 @@ def main():
     print("\n=== Capacity Stress Test ===")
     sizes = [100, 250, 500, 1000, 2500, 5000, 10000]
     for size in sizes:
-        t_df, _ = run_backtest(df, position_size=size)
+        t_df, final_cap = run_backtest(df, position_size=size)
         if len(t_df) > 0:
-            s = generate_performance_summary(t_df, t_df['capital_after'])
-            roi = (s['total_pnl'] / 10000) * 100
+            s = generate_performance_summary(t_df, final_cap)
+            roi = s.get('total_return_pct', 0)
             print(f"Position: ${size:5d} | Trades: {len(t_df):4d} | ROI: {roi:6.2f}% | Sharpe: {s.get('sharpe_ratio', 0):.2f}")
 
     # 6. Parameter Sensitivity
     print("\n=== Parameter Sensitivity: RSI Thresholds ===")
     bounds = [(40, 60), (43, 58), (45, 55), (48, 52)]
     for lower, upper in bounds:
-        t_df, _ = run_backtest(df, rsi_lower=lower, rsi_upper=upper, position_size=100)
-        s = generate_performance_summary(t_df, t_df['capital_after']) if len(t_df) > 0 else {"sharpe_ratio": 0, "total_trades": 0}
+        t_df, final_cap = run_backtest(df, rsi_lower=lower, rsi_upper=upper, position_size=100)
+        s = generate_performance_summary(t_df, final_cap) if len(t_df) > 0 else {"sharpe_ratio": 0, "total_trades": 0}
         print(f"RSI ({lower}/{upper}) | Trades: {s.get('total_trades', 0):4d} | Sharpe: {s.get('sharpe_ratio', 0):.2f}")
 
 if __name__ == '__main__':
