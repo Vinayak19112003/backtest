@@ -5,7 +5,7 @@ Strategy Logic:
 1. Each 15m candle represents one Polymarket market window
 2. Signal checked at candle CLOSE (market boundary)
 3. Outcome determined by NEXT candle close (15 min later)
-4. RSI(43/58) + Bollinger Bands(20, 1.2 SD) on 15m closes
+4. RSI(43/58) + Bollinger Bands(20, 1.1 SD) on 15m closes
 5. Binary PnL: Win +$94, Loss -$102 (includes 2% spread + 2% fee)
 
 Example:

@@ -3,7 +3,7 @@ import numpy as np
 from src.indicators import calculate_rsi, calculate_bollinger_bands
 
 def run_backtest(df, initial_capital=10000, position_size=100, 
-                 rsi_lower=43, rsi_upper=58, bb_period=20, bb_std=1.2):
+                 rsi_lower=43, rsi_upper=58, bb_period=20, bb_std=1.1):
     """
     Run backtest using 15-minute candles
     Signal at candle i close → Outcome at candle i+1 close

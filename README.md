@@ -5,8 +5,8 @@ Backtesting framework for RSI + Bollinger Bands strategy on Polymarket 15-minute
 ## Strategy
 - **Data:** 15-minute OHLCV candles (each candle = one market)
 - **Signal timing:** Checked at candle close
-- **BUY YES:** RSI(14) < 43 AND close < BB lower band (20-period, 1.2 SD)
-- **BUY NO:** RSI(14) > 58 AND close > BB upper band (20-period, 1.2 SD)
+- **BUY YES:** RSI(14) < 43 AND close < BB lower band (20-period, 1.1 SD)
+- **BUY NO:** RSI(14) > 58 AND close > BB upper band (20-period, 1.1 SD)
 - **Outcome:** Next candle close (15 minutes later)
 - **Position:** $100 fixed per trade
 
