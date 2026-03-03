@@ -1,0 +1,10 @@
+# Keep folder structure but ignore result files
+results/*/trades.csv
+results/*/performance_summary.json
+results/*/equity_curve.png
+results/*/regime_analysis.csv
+results/*/backtest_report.txt
+
+# Keep the results directory itself
+!results/
+!results/.gitkeep
