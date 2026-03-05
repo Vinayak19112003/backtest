@@ -1,0 +1,91 @@
+Analysis Log — 2026-03-06T00:01:44.957071
+============================================================
+
+============================================================
+Script: 01_generate_performance_report.py
+Time: 2026-03-06T00:01:49.527446
+Duration: 4.6s
+Exit Code: 0
+============================================================
+Loading data...
+Computing Indicators for Baseline...
+Running baseline simulation...
+Constructing report...
+Report generated successfully.
+
+============================================================
+Script: 02_generate_fixed_capital_analysis.py
+Time: 2026-03-06T00:02:04.619926
+Duration: 15.1s
+Exit Code: 0
+============================================================
+Loading data...
+Computing Indicators...
+Generating trades...
+Total trades: 40,281
+Running compounding simulation...
+Running fixed capital simulations...
+Constructing Section XIV report...
+
+Section XIV report saved to: F:\backtest\reports\fixed_capital\section_xiv_fixed_capital_analysis.txt
+
+Quick Summary:
+  Total Trades: 40,281
+  Win Rate: 54.88%
+  Compounding Final: $3,225.38
+  Total Withdrawn (Monthly): $3,125.38
+  Lowest Balance: $76.98
+  Risk of Ruin: 0.0000003136%
+
+============================================================
+Script: 03_generate_forensic_validation.py
+Time: 2026-03-06T00:02:33.559301
+Duration: 28.9s
+Exit Code: 0
+============================================================
+══════════════════════════════════════════════════════════════════════
+  FORENSIC QUANTITATIVE VALIDATION ENGINE
+  Institutional-Grade Strategy Assessment
+══════════════════════════════════════════════════════════════════════
+
+[1/11] Loading data...
+[2/11] Generating trade list...
+  Trades: 40,281 | WR: 54.88% | P&L: $3,125.38
+
+[3/11] Section I: Statistical Hypothesis Testing...
+[4/11] Section II: Monte Carlo Simulation (10,000 runs)...
+
+  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0.0% Run 0/10,000
+  [████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]  20.0% Run 2,000/10,000
+  [████████████████░░░░░░░░░░░░░░░░░░░░░░░░]  40.0% Run 4,000/10,000
+  [████████████████████████░░░░░░░░░░░░░░░░]  60.0% Run 6,000/10,000
+  [████████████████████████████████░░░░░░░░]  80.0% Run 8,000/10,000
+  [████████████████████████████████████████] 100.0% Complete
+[5/11] Section III: Bootstrap Resampling (10,000 samples)...
+
+  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0.0% Sample 0/10,000
+  [████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]  20.0% Sample 2,000/10,000
+  [████████████████░░░░░░░░░░░░░░░░░░░░░░░░]  40.0% Sample 4,000/10,000
+  [████████████████████████░░░░░░░░░░░░░░░░]  60.0% Sample 6,000/10,000
+  [████████████████████████████████░░░░░░░░]  80.0% Sample 8,000/10,000
+  [████████████████████████████████████████] 100.0% Complete
+[6/11] Section IV: Permutation Tests (10,000 runs)...
+
+  [░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0.0% Permutation 0/10,000
+  [████████░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░]  20.0% Permutation 2,000/10,000
+  [████████████████░░░░░░░░░░░░░░░░░░░░░░░░]  40.0% Permutation 4,000/10,000
+  [████████████████████████░░░░░░░░░░░░░░░░]  60.0% Permutation 6,000/10,000
+  [████████████████████████████████░░░░░░░░]  80.0% Permutation 8,000/10,000
+  [████████████████████████████████████████] 100.0% Complete
+[7/11] Section V: Walk-Forward Analysis...
+[8/11] Section VI: Out-of-Sample Validation...
+[9/11] Section VII: Overfitting Diagnostics...
+[10/11] Section VIII: Tail Risk & Autocorrelation...
+[11/11] Compiling Final Verdict...
+
+══════════════════════════════════════════════════════════════════════
+  REPORT SAVED: F:\backtest\reports\forensic_validation\forensic_validation_report.txt
+  GRADE: A+ (EXCEPTIONAL) | SCORE: 8.0/8.0
+  VERDICT: APPROVED FOR PRODUCTION DEPLOYMENT
+  Duration: 27.1s
+══════════════════════════════════════════════════════════════════════

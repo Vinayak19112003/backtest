@@ -1,0 +1,14 @@
+# Core Data Science
+pandas>=2.0.0         # DataFrames, time series, data manipulation
+numpy>=1.24.0         # Numerical computing, array operations
+scipy>=1.10.0         # Statistical tests (Z-test, t-test, chi-square, etc.)
+
+# Visualization
+matplotlib>=3.7.0     # Chart generation (26 professional charts)
+seaborn>=0.12.0       # Statistical visualization, enhanced matplotlib
+
+# Statistical Analysis
+statsmodels>=0.14.0   # Ljung-Box test, autocorrelation, time series diagnostics
+
+# Utilities
+python-dateutil>=2.8.0  # Date parsing and manipulation

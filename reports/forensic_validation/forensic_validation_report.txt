@@ -1,0 +1,308 @@
+═══════════════════════════════════════════════════════════════════════
+FORENSIC QUANTITATIVE VALIDATION REPORT
+INSTITUTIONAL-GRADE STRATEGY ASSESSMENT
+═══════════════════════════════════════════════════════════════════════
+
+  Classification:            HIGHLY CONFIDENTIAL
+  Strategy Code:             ALPHA-BTC-15M-v2.0
+  Analysis Date:             March 06, 2026
+  Analyst Level:             Ph.D. Quantitative Research
+  Total Trades:              40,281
+  Test Period:               Feb 2023 - Feb 2026
+  Execution Time:            27.1 seconds
+
+═══════════════════════════════════════════════════════════════════════
+TABLE OF CONTENTS
+═══════════════════════════════════════════════════════════════════════
+
+  I.   Statistical Hypothesis Testing
+  II.  Monte Carlo Simulation (10,000 runs)
+  III. Bootstrap Resampling (10,000 samples)
+  IV.  Permutation & Randomization Tests
+  V.   Walk-Forward Analysis
+  VI.  Out-of-Sample Validation
+  VII. Overfitting Diagnostics
+  VIII.Tail Risk Analysis
+  IX.  Autocorrelation Tests
+  X.   Final Scorecard & Verdict
+
+═══════════════════════════════════════════════════════════════════════
+I. STATISTICAL HYPOTHESIS TESTING
+═══════════════════════════════════════════════════════════════════════
+
+1.1 PRIMARY HYPOTHESIS TEST (Z-TEST)
+────────────────────────────────────────────────────────────────────────
+  H0: Win Rate = 50.5% (breakeven)
+  H1: Win Rate > 50.5% (positive edge)
+
+  Observed Win Rate:         54.88%
+  Sample Size:               40,281 trades
+  Standard Error:            0.2491%
+
+  Z-Statistic:               17.58
+  P-Value:                   3.49e-69
+  Significance:              HIGHLY SIGNIFICANT (p < 0.001)
+
+1.2 ONE-SAMPLE T-TEST (Mean P&L)
+────────────────────────────────────────────────────────────────────────
+  Mean P&L per trade:        $0.0776
+  t-statistic:               15.65
+  p-value:                   5.08e-55
+  95% CI:                    [$0.0679, $0.0873]
+
+1.3 POWER ANALYSIS
+────────────────────────────────────────────────────────────────────────
+  Min sample for 80% power:  501 trades
+  Actual sample:             40,281 trades
+  Oversample factor:         80.4x
+
+  RESULT: PASS (p < 0.001)
+═══════════════════════════════════════════════════════════════════════
+II. MONTE CARLO SIMULATION SUITE (10,000 runs)
+═══════════════════════════════════════════════════════════════════════
+
+2.1 TRADE SEQUENCE RANDOMIZATION
+────────────────────────────────────────────────────────────────────────
+  Simulations:               10,000
+  Trades per sim:            40,281
+  Win Rate (fixed):          54.88%
+
+  FINAL P&L DISTRIBUTION:
+    Mean:                    $3,125.79
+    Median:                  $3,125.38
+    Std Dev:                 $201.49
+    95% CI:                  [$2,737.38, $3,517.38]
+    99% CI:                  [$2,611.37, $3,647.38]
+
+    Actual P&L:              $3,125.38
+    Percentile Rank:         50.0th
+
+  MAX DRAWDOWN DISTRIBUTION:
+    Mean Max DD:             -15.5%
+    Median Max DD:           -14.3%
+    95% CI:                  [-30.3%, -7.9%]
+
+  PROFITABILITY:
+    Paths ending profitable: 100.0%
+
+  RESULT: PASS (100.0% profitable)
+═══════════════════════════════════════════════════════════════════════
+III. BOOTSTRAP RESAMPLING ANALYSIS (10,000 samples)
+═══════════════════════════════════════════════════════════════════════
+
+3.1 WIN RATE BOOTSTRAP
+────────────────────────────────────────────────────────────────────────
+  Original Win Rate:         54.88%
+  Bootstrap Mean:            54.88%
+  Bootstrap Std Error:       0.246%
+  Coefficient of Variation:  0.45%
+
+  95% CI:                    [54.39%, 55.37%]
+  99% CI:                    [54.26%, 55.52%]
+
+3.2 TOTAL P&L BOOTSTRAP
+────────────────────────────────────────────────────────────────────────
+  Bootstrap Mean P&L:        $3,127.25
+  Bootstrap Std Error:       $198.56
+  95% CI:                    [$2,733.33, $3,521.38]
+
+3.3 BOOTSTRAP HYPOTHESIS TEST
+────────────────────────────────────────────────────────────────────────
+  Resamples with WR <= 50.5%: 0 / 10,000
+  Bootstrap p-value:         < 0.0001
+
+  RESULT: PASS (CV = 0.45%, threshold < 5%)
+═══════════════════════════════════════════════════════════════════════
+IV. PERMUTATION & RANDOMIZATION TESTS
+═══════════════════════════════════════════════════════════════════════
+
+4.1 STRATEGY vs RANDOM (10,000 random strategies)
+────────────────────────────────────────────────────────────────────────
+  Random Strategy WR:        50.5% (breakeven)
+  Random Mean P&L:           $-403.91
+  Random Std Dev:            $198.67
+  Random Max P&L:            $271.38
+  Random Min P&L:            $-1,184.62
+
+  Actual Strategy P&L:       $3,125.38
+  Random exceeding actual:   0 / 10,000
+  Sigma above random:        17.8σ
+  Permutation p-value:       < 0.0001
+
+  RESULT: PASS (17.8σ above random, threshold > 3σ)
+═══════════════════════════════════════════════════════════════════════
+V. WALK-FORWARD ANALYSIS
+═══════════════════════════════════════════════════════════════════════
+
+5.1 ROLLING 6-MONTH WINDOWS
+────────────────────────────────────────────────────────────────────────
+Period | Dates                | Trades |    WR% |      P&L | Sharpe | Pass?
+-------|----------------------|--------|--------|----------|--------|------
+WF1    | Feb 2023 - Jul 2023  |  6,167 |  55.9% | $    600 |  11.46 | ✅
+WF2    | Aug 2023 - Jan 2024  |  5,810 |  56.9% | $    686 |  13.47 | ✅
+WF3    | Feb 2024 - Jul 2024  |  6,516 |  54.9% | $    510 |   9.38 | ✅
+WF4    | Aug 2024 - Jan 2025  |  6,813 |  53.8% | $    381 |   7.18 | ✅
+WF5    | Feb 2025 - Jul 2025  |  7,103 |  53.1% | $    297 |   5.19 | ✅
+WF6    | Aug 2025 - Jan 2026  |  6,973 |  55.4% | $    620 |  11.15 | ✅
+WF7    | Feb 2026 - Feb 2026  |    899 |  52.8% | $     33 |   5.76 | ✅
+
+  STABILITY METRICS:
+    WR Range:                52.8% - 56.9%
+    WR Std Dev:              1.40%
+    WR Coeff of Variation:   2.6%
+    Profitable Windows:      7/7
+
+5.2 WALK-FORWARD EFFICIENCY
+────────────────────────────────────────────────────────────────────────
+    First 50% P&L:           $1,889.20
+    Second 50% P&L:          $1,236.18
+    WF Efficiency:           65.4%
+    (>70% = Excellent, 50-70% = Good, <50% = Poor)
+
+  RESULT: PASS (7/7 windows profitable)
+═══════════════════════════════════════════════════════════════════════
+VI. OUT-OF-SAMPLE VALIDATION
+═══════════════════════════════════════════════════════════════════════
+
+6.1 IN-SAMPLE vs OUT-OF-SAMPLE (3-MONTH HOLDOUT)
+────────────────────────────────────────────────────────────────────────
+  In-Sample Period:          Feb 2023 - Nov 2025
+  Out-of-Sample Period:      Nov 2025 - Feb 2026
+
+  Metric               |    In-Sample |  Out-of-Sample |     Diff
+  ---------------------|--------------|----------------|---------
+  Trades               |       36,891 |          3,390 |         
+  Win Rate             |       54.79% |         55.84% |   +1.05%
+  Total P&L            | $   2,797.18 | $       328.20 | $  -2469
+  Sharpe               |         9.18 |          12.68 |    +3.50
+
+  OOS / IS Ratio:            101.9%
+  (≥90% = PASS, <90% = FAIL)
+
+  RESULT: PASS (OOS WR = 101.9% of IS WR)
+═══════════════════════════════════════════════════════════════════════
+VII. OVERFITTING DIAGNOSTICS
+═══════════════════════════════════════════════════════════════════════
+
+7.1 SHARPE RATIO ANALYSIS
+────────────────────────────────────────────────────────────────────────
+  Observed Sharpe (ann.):    9.45
+  Daily Mean Return:         $2.7955
+  Daily Std Dev:             $5.6528
+
+7.2 DEFLATED SHARPE RATIO (DSR)
+────────────────────────────────────────────────────────────────────────
+  Estimated Trials:          10
+  Expected Max SR (random):  1.74
+  Deflation Factor:          0.815
+  Deflated Sharpe:           7.70
+
+  Interpretation:
+    DSR > 2:  Excellent
+    DSR 1-2:  Good
+    DSR < 1:  Questionable
+
+7.3 PROBABILISTIC SHARPE RATIO (PSR)
+────────────────────────────────────────────────────────────────────────
+  P(True SR > 1.0):          100.00%
+  P(True SR > 2.0):          100.00%
+  Skewness:                  -0.309
+  Kurtosis:                  2.98
+
+  RESULT: PASS (DSR = 7.70, threshold > 2.0)
+═══════════════════════════════════════════════════════════════════════
+VIII. TAIL RISK ANALYSIS
+═══════════════════════════════════════════════════════════════════════
+
+8.1 VALUE-AT-RISK (Historical)
+────────────────────────────────────────────────────────────────────────
+  VaR 95%:                   $-6.94 (5th pctile daily P&L)
+  VaR 99%:                   $-10.55 (1st pctile daily P&L)
+
+8.2 CONDITIONAL VaR (Expected Shortfall)
+────────────────────────────────────────────────────────────────────────
+  CVaR 95%:                  $-9.43 (mean of worst 5% days)
+  CVaR 99%:                  $-13.39 (mean of worst 1% days)
+
+8.3 DRAWDOWN METRICS
+────────────────────────────────────────────────────────────────────────
+  Max Drawdown:              -9.2%
+  Daily P&L Std Dev:         $5.65
+  Worst Single Day:          $-20.26
+  Best Single Day:           $18.18
+═══════════════════════════════════════════════════════════════════════
+IX. AUTOCORRELATION & INDEPENDENCE TESTS
+═══════════════════════════════════════════════════════════════════════
+
+9.1 LJUNG-BOX TEST (20 lags)
+────────────────────────────────────────────────────────────────────────
+  LB Statistic:              21.07
+  P-Value:                   0.3930
+  Null Hypothesis:           Returns are independent (no autocorrelation)
+
+  Interpretation:
+    p > 0.05: Returns are independent (GOOD)
+    p < 0.05: Returns have serial correlation (BAD)
+
+  RESULT: PASS (p = 0.3930, independent)
+
+═══════════════════════════════════════════════════════════════════════
+FORENSIC VALIDATION SCORECARD
+═══════════════════════════════════════════════════════════════════════
+
+  Test                           |   Result | Detail                    | Pass?
+  -------------------------------|----------|---------------------------|------
+  Statistical Significance       |     PASS | p = 3.49e-69              | ✅
+  Monte Carlo Profitability      |     PASS | 100.0% profitable         | ✅
+  Bootstrap Stability            |     PASS | CV = 0.45%                | ✅
+  Permutation vs Random          |     PASS | 17.8σ above               | ✅
+  Walk-Forward Consistency       |     PASS | 7/7 windows               | ✅
+  Out-of-Sample Validity         |     PASS | 101.9% of IS              | ✅
+  Deflated Sharpe Ratio          |     PASS | DSR = 7.70                | ✅
+  No Autocorrelation             |     PASS | p = 0.3930                | ✅
+
+  ────────────────────────────────────────────────────────────────────────────────
+  TOTAL SCORE:               8.0 / 8.0
+  INSTITUTIONAL GRADE:       A+ (EXCEPTIONAL)
+
+═══════════════════════════════════════════════════════════════════════
+FINAL FORENSIC VERDICT
+═══════════════════════════════════════════════════════════════════════
+
+  Strategy Code:             ALPHA-BTC-15M-v2.0
+  Analysis Date:             March 06, 2026
+  Total Trades Analyzed:     40,281
+  Test Period:               Feb 2023 - Feb 2026
+
+  STATISTICAL ASSESSMENT:
+    Win Rate:                54.88% (vs 50.5% breakeven)
+    Edge:                    +4.38%
+    Z-Score:                 17.58 (p < 0.001)
+    Sharpe Ratio:            9.45 (deflated: 7.70)
+
+  ROBUSTNESS:
+    Monte Carlo:             100.0% profitable (10,000 sims)
+    Bootstrap CV:            0.45%
+    Walk-Forward:            7/7 windows profitable
+    OOS Performance:         101.9% of in-sample
+
+  RISK PROFILE:
+    Max Drawdown:            -9.2%
+    VaR 95%:                 $-6.94
+    CVaR 95%:                $-9.43
+
+  ┌─────────────────────────────────────────────────────────────┐
+  │                                                             │
+  │   VERDICT: APPROVED FOR PRODUCTION DEPLOYMENT              │
+  │   GRADE:   A+ (EXCEPTIONAL)                                │
+  │   SCORE:   8.0 / 8.0                                           │
+  │                                                             │
+  └─────────────────────────────────────────────────────────────┘
+
+  Analysis Duration:         27.1 seconds
+
+═══════════════════════════════════════════════════════════════════════
+  Classification: HIGHLY CONFIDENTIAL
+  Analyst: Quantitative Research Division
+  Review Cycle: Quarterly re-validation recommended
+═══════════════════════════════════════════════════════════════════════

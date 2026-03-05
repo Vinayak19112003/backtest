@@ -1,0 +1,36 @@
+VISUALIZATION SUITE — GENERATION SUMMARY
+==================================================
+Generated: March 06, 2026 00:03
+Total Charts: 26
+Output Directory: F:\backtest\visualizations
+Duration: 14.7 seconds
+
+CHART INDEX:
+01. Cumulative P&L Equity Curve
+02. Daily P&L Distribution (with Normal overlay)
+03. Equity Curve with Underwater Periods
+04. Rolling 30-Day Sharpe Ratio
+05. Monthly Returns Heatmap
+06. Drawdown from Peak
+07. Win/Loss Streak Distribution
+08. Hourly Performance (trades + WR)
+09. Day of Week Performance
+10. Monthly Profit Factor
+11. Volatility Regime Win Rates
+12. Trend Regime Win Rates
+13. Rolling 500-Trade Win Rate
+14. Rolling 30-Day Volatility
+15. Rolling 30-Day Max Drawdown
+16. Value-at-Risk Analysis
+17. Monte Carlo P&L Distribution
+18. Bootstrap Win Rate Distribution
+19. Walk-Forward Consistency
+20. Q-Q Plot (Returns vs Normal)
+21. Regime Heatmap (Vol × Trend)
+22. Cumulative Wins vs Losses
+23. Monthly Trade Count
+24. Signal Distribution
+25. Risk-Adjusted Return Ratios
+26. Monte Carlo Equity Paths
+
+Classification: CONFIDENTIAL
