@@ -1,263 +1,497 @@
-Create a complete backtesting framework for Polymarket BTC 15-minute UP/DOWN prediction market strategies with the following requirements:
+Build a professional-grade backtesting framework for Polymarket BTC 15-minute UP/DOWN prediction markets with institutional validation layers.
 
-## Core Requirements
+═══════════════════════════════════════════════════════════════════════
+CONTEXT: Polymarket BTC 15-Minute Markets
+═══════════════════════════════════════════════════════════════════════
 
-1. **Data Structure**
-   - Load historical BTC OHLCV data (1-minute granularity minimum)
-   - Load Polymarket orderbook data: YES/NO token prices, bid/ask spreads, volumes
-   - Synchronize timestamps between BTC price data and Polymarket market data
-   - Store market settlement outcomes (actual UP/DOWN results every 15 minutes)
+MARKET STRUCTURE:
+- New market every 15 minutes asking: "Will BTC price go UP or DOWN?"
+- YES token = predicting price UP in next 15 minutes
+- NO token = predicting price DOWN in next 15 minutes
+- Settlement: Compare BTC price at market close vs market open
+- Trading costs: 2% bid-ask spread + 2% Polymarket fee on wins
 
-2. **Strategy Implementation**
-   - Support multiple strategy types: technical indicators (RSI, MA, Bollinger Bands), ML models (XGBoost, LightGBM), combined approaches
-   - Generate trading signals based on BTC price action
-   - Implement entry logic: when to buy YES (predicting UP) or NO (predicting DOWN)
-   - Implement exit logic: hold until settlement or early exit based on profit targets
+DATA REQUIREMENTS:
+- BTC/USDT 15-minute OHLCV candles (3+ years historical)
+- Each candle represents one complete market cycle
+- Signal generated at candle close (time T)
+- Outcome determined at next candle close (time T+15min)
 
-3. **Event-Driven Backtesting Engine**
-   - Simulate tick-by-tick execution (no look-ahead bias)
-   - Process data chronologically: data arrives → calculate indicators → generate signal → place order → execute → update portfolio
-   - Track each 15-minute market cycle separately
-   - Record entry price, exit price, position size, and outcome for each trade
+═══════════════════════════════════════════════════════════════════════
+TIER 1: CORE BACKTESTING ENGINE (BASELINE)
+═══════════════════════════════════════════════════════════════════════
 
-4. **Realistic Execution Simulation**
-   - Apply bid-ask spread costs (use historical spreads from orderbook data)
-   - Implement slippage model based on order size vs available liquidity
-   - Add Polymarket fees (2% on winning positions)
-   - Respect position size limits based on orderbook depth
-   - Simulate partial fills if liquidity is insufficient
+1. EVENT-DRIVEN BACKTEST ENGINE
+   - Load data chronologically (no lookahead bias)
+   - Process flow: Load candle → Calculate indicators → Generate signal → Execute trade → Record outcome
+   - Track each 15-min market as separate trade
+   - Record: entry_time, signal (YES/NO), entry_price, exit_price, outcome, pnl
 
-5. **Risk Management**
-   - Maximum position size per trade (e.g., $100, $500, $1000)
-   - Maximum concurrent positions limit
-   - Stop-loss mechanisms (optional: exit if token price moves against position by X%)
-   - Bankroll management: Kelly Criterion or fixed fractional sizing
+2. STRATEGY SIGNAL GENERATION
+   Support multiple strategy types:
+   - **Technical:** RSI(14), MACD, Bollinger Bands, ADX, ATR
+   - **Momentum:** 30m/1h/90m returns, price acceleration
+   - **Volume:** OFI (Order Flow Imbalance), VPIN, volume surges
+   - **ML Models:** XGBoost, LightGBM with feature engineering
+   
+   Signal logic:
+   - BUY YES: Predict BTC will go UP in next 15 minutes
+   - BUY NO: Predict BTC will go DOWN in next 15 minutes
+   - Hold to settlement (no early exit for simplicity)
 
-6. **Performance Metrics Calculation**
-   **Returns:**
-   - Total PnL, ROI, win rate, profit factor
+3. REALISTIC EXECUTION SIMULATION
+   - Entry cost: 2% spread (buy YES at $0.51 instead of $0.50)
+   - Win payout: $1.00 per share minus 2% Polymarket fee = $0.98
+   - Loss: Lose entire bet amount
+   - Example: Bet $100 on YES → Win: +$94 net | Loss: -$102 net
+   - Breakeven win rate: 52% (to cover spread + fees)
+
+4. CORE PERFORMANCE METRICS
+   Calculate and display:
+   - Total trades, wins, losses, win rate
+   - Total PnL, ROI, final capital
+   - Average win, average loss, profit factor
+   - Maximum drawdown (USD and %), drawdown duration (days)
    - Sharpe ratio, Sortino ratio, Calmar ratio
-   - Maximum drawdown, average drawdown duration
-   
-   **Trade Statistics:**
-   - Number of trades, average trade duration
-   - Average win size, average loss size
-   - Largest winning trade, largest losing trade
-   - Consecutive wins/losses streaks
-   
-   **Execution Quality:**
-   - Fill rate (% of orders successfully executed)
-   - Average slippage per trade
-   - Strategy capacity (max capital deployable given liquidity)
+   - Monthly breakdown: trades per month, monthly PnL, monthly win rate
 
-7. **Walk-Forward Analysis**
-   - Split data into train/validation/test sets (60/20/20)
-   - Rolling window optimization: train on 30 days, test on next 7 days, roll forward
-   - Track performance degradation between in-sample and out-of-sample periods
-   - Flag overfitting if out-of-sample performance drops significantly
+═══════════════════════════════════════════════════════════════════════
+TIER 2: STATISTICAL EDGE VALIDATION (CRITICAL)
+═══════════════════════════════════════════════════════════════════════
 
-## Advanced Validation Layers
+5. STATISTICAL SIGNIFICANCE TESTING
+   Validate that strategy edge is real, not random luck:
+   
+   **Bootstrap Confidence Intervals:**
+   - Resample trades 10,000 times with replacement
+   - Calculate 95% confidence interval for mean PnL
+   - If CI includes zero, strategy is not statistically significant
+   - Require CI lower bound > 0 for validation
+   
+   **T-Test for Mean Returns:**
+   - Null hypothesis: Mean return = 0 (strategy is random)
+   - Calculate t-statistic and p-value
+   - Reject null if p < 0.05 (95% confidence)
+   - Report: "Strategy has {p_value:.4f} probability of being random"
+   
+   **Minimum Sample Size:**
+   - Require at least 100 trades for statistical validity
+   - Flag if sample size < 100: "Insufficient data for validation"
+   - Calculate required trades for 95% confidence given observed Sharpe
+   
+   **Randomization Test:**
+   - Shuffle trade outcomes 1,000 times randomly
+   - Compare actual Sharpe ratio vs distribution of random Sharpes
+   - Strategy must beat >95% of random permutations
+   - Visual: Histogram of random Sharpes with actual Sharpe marked
 
-8. **Edge Validation Layer**
-   **Statistical Significance Testing:**
-   - Bootstrap analysis: resample trades 10,000 times to calculate confidence intervals
-   - T-test for mean returns vs zero (is strategy genuinely profitable?)
-   - Calculate p-values: reject null hypothesis that returns are random
-   - Minimum sample size check: require at least 100 trades for statistical validity
+6. EDGE DECAY ANALYSIS
+   Track if strategy edge is degrading over time:
    
-   **Edge Decay Analysis:**
-   - Split backtest into time buckets (monthly or quarterly)
-   - Track Sharpe ratio evolution over time
-   - Detect if edge is strengthening, stable, or degrading
-   - Calculate rolling 30-day win rate and profit factor
-   - Flag strategies where recent performance < historical average by >20%
+   **Rolling Metrics:**
+   - Calculate 30-day rolling win rate
+   - Calculate 90-day rolling Sharpe ratio
+   - Plot both over time to detect trends
    
-   **Signal Quality Metrics:**
-   - Information Coefficient (IC): correlation between predicted direction and actual outcome
-   - Calculate IC for each signal component separately
-   - Rank signals by predictive power
-   - Identify which indicators contribute most to edge
+   **Time-Bucketed Performance:**
+   - Split data into quarterly buckets (Q1, Q2, Q3, Q4)
+   - Calculate Sharpe for each quarter
+   - Flag if recent quarter Sharpe < historical average by >30%
    
-   **Randomization Tests:**
-   - Shuffle entry/exit times randomly and re-run backtest
-   - Compare actual strategy PnL vs 1,000 random permutations
-   - Strategy must outperform >95% of random strategies to validate edge
-   - Monte Carlo simulation: randomize entry timing ±2 minutes to test robustness
+   **Edge Stability Score:**
+   - Calculate coefficient of variation (CV) of quarterly Sharpes
+   - CV < 0.3 = stable edge
+   - CV > 0.5 = unstable/degrading edge
+   
+   **Regime Shift Detection:**
+   - Use rolling t-test to detect structural breaks in performance
+   - Alert if edge significantly changed in recent 100 trades
 
-9. **Regime Detection Layer**
-   **Market State Classification:**
-   - **Volatility Regimes:** High (ATR > 80th percentile), Medium, Low (ATR < 20th percentile)
-   - **Trend Regimes:** Strong Up (ADX > 25, +DI > -DI), Strong Down, Ranging (ADX < 20)
-   - **Liquidity Regimes:** Deep (orderbook depth > median), Thin (depth < 25th percentile)
-   - **Time-Based Regimes:** US market hours, Asia hours, weekend, weekday
+7. SIGNAL QUALITY METRICS
+   Measure predictive power of individual signals:
    
-   **Regime-Specific Performance:**
-   - Calculate separate metrics for each regime
-   - Sharpe ratio by volatility level (does strategy work in high vol?)
-   - Win rate by trend direction (does strategy fail in trending markets?)
-   - Drawdowns by regime (which conditions cause worst losses?)
+   **Information Coefficient (IC):**
+   - Calculate correlation between predicted direction and actual outcome
+   - IC = corr(predicted_return, actual_return)
+   - IC > 0.05 = valuable signal, IC > 0.10 = strong signal
    
-   **Adaptive Filtering:**
-   - Only trade in favorable regimes (e.g., disable strategy when ADX < 15)
-   - Adjust position sizing by regime (reduce size in high volatility)
-   - Create regime-switching rules (use Strategy A in trending, Strategy B in ranging)
+   **Feature Importance:**
+   - For each indicator (RSI, MACD, OFI, etc.), calculate separate win rate
+   - Identify which features contribute most to edge
+   - Disable low-IC features to reduce noise
    
-   **Regime Transition Analysis:**
-   - Detect regime changes in real-time using Hidden Markov Models or threshold rules
-   - Measure strategy performance during regime transitions
-   - Test if edge exists during stable regimes but disappears during transitions
+   **Calibration Plot:**
+   - If using probability predictions (ML models):
+   - Bucket predictions: 50-55%, 55-60%, 60-65%, etc.
+   - For each bucket, calculate actual win rate
+   - Perfect calibration: 60% confidence → 60% actual wins
+   - Plot predicted vs actual to detect over/under-confidence
 
-10. **Capacity Stress Test**
-    **Scalability Analysis:**
-    - Test strategy with position sizes: $100, $500, $1K, $5K, $10K, $50K
-    - Calculate slippage impact at each size level
-    - Identify maximum profitable position size (capacity limit)
-    - Plot efficiency curve: ROI vs position size
+═══════════════════════════════════════════════════════════════════════
+TIER 3: REGIME-AWARE BACKTESTING (ADVANCED)
+═══════════════════════════════════════════════════════════════════════
+
+8. MARKET REGIME CLASSIFICATION
+   Identify different market conditions:
+   
+   **Volatility Regimes:**
+   - Calculate ATR(14) percentile over rolling 96-period window
+   - High Vol: ATR > 80th percentile
+   - Medium Vol: 20th < ATR < 80th percentile
+   - Low Vol: ATR < 20th percentile
+   
+   **Trend Regimes:**
+   - Use ADX(14) to measure trend strength
+   - Strong Trend: ADX > 25
+   - Weak Trend: 15 < ADX < 25
+   - Ranging: ADX < 15
+   - Combine with +DI/-DI for direction (up/down/neutral)
+   
+   **Time-Based Regimes:**
+   - US Market Hours (9:30 AM - 4 PM EST)
+   - Asia Hours (8 PM - 2 AM EST)
+   - Weekend (Saturday-Sunday)
+   - Weekday (Monday-Friday)
+   
+   **Liquidity Regimes (if orderbook data available):**
+   - Deep: Spread < 2%, Depth > median
+   - Normal: 2% < Spread < 5%
+   - Thin: Spread > 5%, Depth < 25th percentile
+
+9. REGIME-SPECIFIC PERFORMANCE ANALYSIS
+   Calculate separate metrics for each regime:
+   
+   **Performance Table by Regime:**
+   ```
+   Regime            | Trades | Win Rate | Sharpe | Max DD | Profit Factor
+   ------------------|--------|----------|--------|--------|---------------
+   High Vol / Strong |   234  |   48%    |  0.8   | -18%   |      1.2
+   High Vol / Weak   |   456  |   62%    |  2.4   |  -8%   |      2.8
+   Low Vol / Ranging |   789  |   55%    |  1.6   | -12%   |      1.9
+   Weekend           |   123  |   67%    |  3.1   |  -5%   |      3.5
+   ```
+   
+   **Regime Filtering Rules:**
+   - Identify best-performing regimes (Sharpe > 2.0)
+   - Identify worst-performing regimes (Sharpe < 0.5 or negative)
+   - Create filtered strategy: Only trade in favorable regimes
+   - Report improvement: "Filtered Sharpe: 2.8 vs Unfiltered: 1.4"
+   
+   **Adaptive Position Sizing by Regime:**
+   - Increase position size in high-Sharpe regimes
+   - Reduce position size in high-volatility regimes
+   - Example: 2x size in Weekend + Low Vol, 0.5x size in High Vol + Strong Trend
+
+10. WALK-FORWARD OPTIMIZATION
+    Prevent overfitting through proper train/test splits:
     
-    **Liquidity Consumption:**
-    - Calculate % of available orderbook depth consumed per trade
-    - Flag trades that would move market by >5%
-    - Estimate realistic daily volume capacity (don't exceed 10% of market volume)
-    - Test with aggressive execution (immediate fills) vs passive (limit orders)
+    **Data Splitting:**
+    - Train (In-Sample): First 60% of data
+    - Validation: Next 20% of data
+    - Test (Out-of-Sample): Final 20% of data
     
-    **Concurrent Position Stress:**
-    - Simulate 1, 3, 5, 10 concurrent positions
-    - Test if correlation between positions increases risk
-    - Calculate portfolio-level drawdown vs single-position drawdown
-    - Identify optimal max concurrent positions before returns diminish
+    **Rolling Window Validation:**
+    - Window size: Train on 60 days, test on next 14 days
+    - Roll forward: Shift window by 14 days, repeat
+    - Track performance degradation: In-sample Sharpe vs Out-of-sample Sharpe
     
-    **Market Impact Modeling:**
-    - Implement square-root market impact model: impact ∝ √(order_size / avg_volume)
-    - Add temporary impact (price reverts after trade) and permanent impact
-    - Recalculate strategy returns with market impact included
-    - Determine break-even point where impact costs exceed edge
-    
-    **Frequency Scaling:**
-    - Test strategy at different trading frequencies (every market, every 2nd market, hourly)
-    - Calculate optimal trading frequency that maximizes Sharpe ratio
-    - Identify if overtrading erodes returns due to costs
+    **Overfitting Detection:**
+    - Calculate degradation ratio: Test_Sharpe / Train_Sharpe
+    - Healthy: Ratio > 0.7 (test performance is 70%+ of train)
+    - Overfit: Ratio < 0.5 (strategy doesn't generalize)
+    - Report: "Strategy passes overfitting test: Test Sharpe = 1.8, Train Sharpe = 2.1"
 
-11. **Expected Value vs Market Price Edge Analysis**
-    **True Probability Estimation:**
-    - Calculate strategy's predicted probability of UP: P(UP) from model or signal strength
-    - Compare against market-implied probability from token prices
-    - Market implied: P(UP)_market = YES_price / (YES_price + NO_price)
+═══════════════════════════════════════════════════════════════════════
+TIER 4: EXPECTED VALUE & EDGE DETECTION (ELITE)
+═══════════════════════════════════════════════════════════════════════
+
+11. MARKET MISPRICING DETECTION
+    Calculate true probability vs market-implied probability:
+    
+    **Strategy Probability Estimation:**
+    - For technical strategies: Use signal strength to estimate probability
+    - For ML models: Use model's probability output directly
+    - Example: RSI = 25 → P(UP) ≈ 65% based on historical calibration
+    
+    **Market-Implied Probability:**
+    - If YES token = $0.55, NO token = $0.45
+    - Market thinks P(UP) = 55%, P(DOWN) = 45%
     
     **Edge Calculation:**
-    - Edge = P(UP)_strategy - P(UP)_market
-    - Only trade when |Edge| > threshold (e.g., 5% probability difference)
-    - Calculate expected value: EV = (P(UP) × Payout_if_UP) - (P(DOWN) × Loss_if_DOWN) - Fees
+    - Edge = Strategy_P(UP) - Market_P(UP)
+    - Edge = 0.65 - 0.55 = 0.10 (10% probability edge)
+    - Only trade when |Edge| > threshold (e.g., 5% minimum edge)
     
-    **Kelly Criterion Position Sizing:**
-    - Optimal bet size: f* = (p × b - q) / b
-    - Where p = win probability, q = 1-p, b = odds received
-    - Calculate Kelly fraction for each trade based on edge
-    - Implement fractional Kelly (e.g., 0.5× Kelly) for safety
-    
-    **Mispricing Detection:**
-    - Identify trades where strategy confidence is highest AND market price is most wrong
-    - Create "high conviction" subset: trades with EV > 10%
-    - Backtest high-conviction trades separately (should have higher Sharpe)
-    - Track calibration: does a 70% model prediction win 70% of the time?
-    
-    **Market Efficiency Analysis:**
-    - Calculate average edge size over time (is market getting more efficient?)
-    - Identify which market conditions produce largest mispricings
-    - Test if edge disappears as markets mature or during high-liquidity periods
-    - Compare edge on first market of the day vs later markets
-    
-    **Arbitrage Opportunity Detection:**
-    - Check if YES_price + NO_price ≠ 1.0 (accounting for fees)
-    - Identify locked-in profit opportunities
-    - Calculate frequency and size of arbitrage vs directional edge
-    
-    **Fair Value Tracking:**
-    - Calculate theoretical fair value based on strategy model
-    - Track deviation: Market_Price - Fair_Value over time
-    - Enter when deviation exceeds 2 standard deviations
-    - Create mean-reversion overlay strategy
-
-## Comprehensive Reporting
-
-12. **Visualization & Reporting**
-    - Equity curve (cumulative PnL over time)
-    - Drawdown chart with regime annotations
-    - Trade distribution histogram (win/loss sizes)
-    - Performance by market regime (heatmap)
-    - Performance by time of day and day of week
-    - Confusion matrix (predicted UP/DOWN vs actual outcome)
-    - Edge validation dashboard (statistical significance tests)
-    - Regime performance comparison table
-    - Capacity scaling curve (ROI vs position size)
-    - EV vs actual returns scatter plot (calibration check)
-
-13. **Data Export**
-    - Export all trades to CSV: timestamp, signal, entry_price, exit_price, position_size, pnl, outcome, regime, edge, EV
-    - Export performance metrics summary to JSON (overall + by regime)
-    - Export edge validation results (p-values, IC, bootstrap CI)
-    - Export capacity analysis results
-    - Export equity curve data for external analysis
-
-14. **Code Structure**
+    **Expected Value Formula:**
     ```
-    ├── data_loader.py          # Load and preprocess historical data
-    ├── indicators.py           # Technical indicators and features
-    ├── strategy.py             # Strategy logic and signal generation
-    ├── backtester.py           # Event-driven backtest engine
-    ├── execution.py            # Order execution and slippage simulation
-    ├── portfolio.py            # Position tracking and PnL calculation
-    ├── metrics.py              # Performance metrics calculation
-    ├── edge_validator.py       # Statistical significance and edge tests
-    ├── regime_detector.py      # Market regime classification
-    ├── capacity_tester.py      # Scalability and stress testing
-    ├── ev_analyzer.py          # Expected value and mispricing detection
-    ├── visualizer.py           # Charts and reports generation
-    ├── walk_forward.py         # Walk-forward optimization
-    └── main.py                 # Run backtest with configuration
+    EV = [P(WIN) × Payout_if_WIN] - [P(LOSE) × Loss_if_LOSE] - Fees
+    
+    Example:
+    Bet $100 on YES when P(UP) = 65%, entry price = $0.51
+    Shares = $100 / $0.51 = 196 shares
+    
+    If WIN: Payout = 196 × $1.00 = $196, minus 2% fee = $192, PnL = $92
+    If LOSE: Loss = $100
+    
+    EV = (0.65 × $92) - (0.35 × $100) = $59.80 - $35.00 = $24.80
+    
+    EV% = $24.80 / $100 = 24.8% expected return per trade
+    ```
+    
+    **Trade Filter:**
+    - Only execute trades where EV > 5%
+    - Log rejected trades: "Skipped: EV = 2.3% < threshold"
+
+12. KELLY CRITERION POSITION SIZING
+    Optimize bet size based on edge:
+    
+    **Kelly Formula:**
+    ```
+    f* = (p × b - q) / b
+    
+    Where:
+    - p = win probability (from strategy)
+    - q = 1 - p (loss probability)
+    - b = odds received (payout / bet)
+    
+    Example:
+    p = 0.65, q = 0.35
+    Win: +$0.92 per $1 bet → b = 0.92
+    
+    f* = (0.65 × 0.92 - 0.35) / 0.92
+    f* = (0.598 - 0.35) / 0.92 = 0.270 = 27% of bankroll
+    ```
+    
+    **Fractional Kelly for Safety:**
+    - Full Kelly is aggressive (high volatility)
+    - Use Quarter Kelly: f = f* / 4 = 6.75% of bankroll
+    - Use Half Kelly: f = f* / 2 = 13.5% of bankroll
+    
+    **Position Size Calculation:**
+    ```python
+    kelly_fraction = calculate_kelly(win_prob, avg_win, avg_loss)
+    quarter_kelly = kelly_fraction / 4
+    
+    # Cap at 5% maximum per trade
+    position_size = min(quarter_kelly * capital, 0.05 * capital)
+    
+    # Minimum $1 bet
+    position_size = max(position_size, 1.0)
+    ```
+    
+    **Dynamic Sizing by Edge:**
+    - Edge 5-8%: Use 0.25x Kelly (conservative)
+    - Edge 8-12%: Use 0.5x Kelly (moderate)
+    - Edge >12%: Use 1.0x Kelly (aggressive, capped at 5%)
+
+13. CALIBRATION & MODEL VALIDATION
+    Ensure probability estimates are accurate:
+    
+    **Calibration Curve:**
+    - Bucket all trades by predicted probability: [50-55%, 55-60%, ..., 90-95%]
+    - For each bucket, calculate actual win rate
+    - Plot: X-axis = predicted probability, Y-axis = actual win rate
+    - Perfect calibration = diagonal line (y = x)
+    - Overconfident = curve below diagonal
+    - Underconfident = curve above diagonal
+    
+    **Brier Score:**
+    - Measures probability forecast accuracy
+    - BS = mean((predicted_prob - actual_outcome)²)
+    - Lower is better, perfect = 0
+    - BS < 0.2 = well-calibrated, BS > 0.3 = poorly calibrated
+    
+    **Log Loss:**
+    - LL = -mean(actual × log(predicted) + (1-actual) × log(1-predicted))
+    - Penalizes confident wrong predictions heavily
+    - Use for model selection and hyperparameter tuning
+
+═══════════════════════════════════════════════════════════════════════
+TIER 5: CAPACITY & SCALABILITY TESTING
+═══════════════════════════════════════════════════════════════════════
+
+14. POSITION SIZE STRESS TESTING
+    Test strategy at different capital levels:
+    
+    **Test Sizes:** [$50, $100, $500, $1K, $5K, $10K]
+    
+    **Slippage Model:**
+    - Base slippage: 2% (bid-ask spread)
+    - Additional slippage for large orders:
+      ```
+      additional_slippage = 0.5% × (order_size / $1000)
+      total_slippage = 2% + additional_slippage
+      ```
+    
+    **Efficiency Curve:**
+    - Plot: X-axis = position size, Y-axis = Sharpe ratio
+    - Identify inflection point where Sharpe starts declining
+    - Maximum efficient size = size where Sharpe drops by >20%
+    
+    **Capacity Report:**
+    ```
+    Position Size | Sharpe | ROI  | Max DD | Total Slippage
+    --------------|--------|------|--------|----------------
+    $100          |  2.4   | 180% |  -8%   |      2.0%
+    $500          |  2.2   | 165% |  -9%   |      2.1%
+    $1000         |  1.9   | 142% | -11%   |      2.3%
+    $5000         |  1.3   |  98% | -15%   |      3.2%
+    $10000        |  0.8   |  64% | -22%   |      4.5%
+    
+    Recommended max size: $1000 (before Sharpe degradation)
     ```
 
-## Strategy Examples to Test
+15. CONCURRENT POSITION ANALYSIS
+    Test strategy with multiple open positions:
+    
+    **Correlation Risk:**
+    - If holding 3 positions within 45 minutes, they're highly correlated
+    - All positions likely win/lose together (not diversified)
+    - Calculate portfolio-level drawdown vs single-position drawdown
+    
+    **Optimal Concurrency:**
+    - Test max concurrent positions: 1, 3, 5, 10
+    - Compare: Total return, Sharpe, max drawdown for each
+    - Often optimal = 1-2 positions (due to correlation)
+    
+    **Position Timing Filter:**
+    - Don't open new position if existing position opened < 30 min ago
+    - Reduces correlation, improves risk-adjusted returns
 
-**Strategy 1: RSI Mean Reversion**
-- Buy YES if RSI(14) < 30 and price dropped in last 5 minutes
-- Buy NO if RSI(14) > 70 and price increased in last 5 minutes
-- Hold until settlement
-- Apply regime filter: only trade when ADX < 20 (ranging market)
+═══════════════════════════════════════════════════════════════════════
+OUTPUT: COMPREHENSIVE BACKTEST REPORT
+═══════════════════════════════════════════════════════════════════════
 
-**Strategy 2: Momentum Breakout**
-- Buy YES if price breaks above 5-minute high with volume surge
-- Buy NO if price breaks below 5-minute low with volume surge
-- Exit early if profit reaches 10% or loss exceeds 5%
-- Apply regime filter: only trade when ADX > 25 (trending market)
+Generate a professional report with these sections:
 
-**Strategy 3: ML Prediction Model with EV Filter**
-- Train XGBoost on features: RSI, MACD, Bollinger %B, volume, time-of-day
-- Predict probability of UP vs DOWN
-- Calculate EV: only trade when EV > 5% after fees
-- Position size using Kelly Criterion based on predicted edge
-- Only trade in medium/high liquidity regimes
+1. EXECUTIVE SUMMARY
+   - Strategy name and description
+   - Data period tested (start date, end date, total days)
+   - Overall results: Win rate, Sharpe ratio, Total PnL, Max drawdown
+   - Statistical significance: p-value, confidence intervals
+   - Verdict: "Strategy passes validation" or "Strategy fails validation"
 
-## Configuration Parameters
+2. CORE PERFORMANCE METRICS
+   - Total trades, wins, losses
+   - Win rate, profit factor
+   - Average win, average loss
+   - Largest win, largest loss
+   - Maximum consecutive wins/losses
+   - Total PnL, ROI, final capital
+   - Sharpe ratio, Sortino ratio, Calmar ratio
+   - Maximum drawdown (USD and %), drawdown duration
+   - Monthly breakdown table (trades, wins, PnL per month)
+
+3. EDGE VALIDATION RESULTS
+   - Bootstrap 95% CI for mean PnL: [$X.XX, $Y.YY]
+   - T-test p-value: 0.0234 → "Statistically significant at 95% confidence"
+   - Randomization test: "Strategy beats 97.8% of random permutations"
+   - Information Coefficient: 0.12 → "Strong predictive signal"
+   - Brier score: 0.18 → "Well-calibrated probability estimates"
+
+4. REGIME PERFORMANCE ANALYSIS
+   - Table: Performance by volatility regime
+   - Table: Performance by trend regime
+   - Table: Performance by time of day
+   - Table: Performance by day of week
+   - Recommendation: "Trade only in [Low Vol + Ranging] for Sharpe 3.2"
+   - Regime filter impact: "Filtered Sharpe: 2.8 vs Unfiltered: 1.4 (+100%)"
+
+5. WALK-FORWARD VALIDATION
+   - In-sample Sharpe: 2.3
+   - Out-of-sample Sharpe: 1.9
+   - Degradation ratio: 0.83 → "Strategy generalizes well"
+   - Rolling window results: Table of 12 test periods with performance
+   - Verdict: "Passes overfitting test"
+
+6. EXPECTED VALUE & EDGE ANALYSIS
+   - Average edge per trade: 8.2%
+   - Average EV per trade: 14.5%
+   - Calibration curve plot (predicted vs actual)
+   - High-conviction trades (EV > 20%): 87 trades, 74% win rate, Sharpe 4.1
+   - Recommendation: "Focus on trades with edge > 10% for best results"
+
+7. CAPACITY & SCALABILITY
+   - Efficiency curve plot (position size vs Sharpe)
+   - Recommended max position size: $1000
+   - Estimated daily capacity: $5000 (5 trades × $1000)
+   - Slippage impact at scale: +0.8% at $1000 size
+   - Verdict: "Strategy scales to $1000 per trade without significant degradation"
+
+8. VISUALIZATIONS
+   - Equity curve (cumulative PnL over time)
+   - Drawdown chart with regime overlays
+   - Win/loss distribution histogram
+   - Monthly returns heatmap
+   - Regime performance heatmap
+   - Calibration curve
+   - Edge decay plot (rolling Sharpe over time)
+   - Efficiency curve (size vs Sharpe)
+
+9. TRADE LOG (CSV Export)
+   Columns: timestamp, signal, entry_price, shares, bet_amount, outcome, pnl, capital, regime_vol, regime_trend, edge, ev, win_rate_recent, kelly_fraction
+
+10. STRATEGY IMPROVEMENT RECOMMENDATIONS
+    Based on validation results, suggest:
+    - Parameter adjustments
+    - Regime filters to add
+    - Position sizing modifications
+    - Additional signals to consider
+    - Risk management enhancements
+
+═══════════════════════════════════════════════════════════════════════
+IMPLEMENTATION REQUIREMENTS
+═══════════════════════════════════════════════════════════════════════
+
+CODE STRUCTURE:
+```
+backtest/
+├── data_loader.py          # Load BTC OHLCV data
+├── indicators.py           # RSI, MACD, ATR, ADX, OFI, VPIN
+├── strategy.py             # Signal generation logic
+├── backtester.py           # Event-driven engine
+├── metrics.py              # Performance calculations
+├── edge_validator.py       # Statistical tests, bootstrap, IC
+├── regime_detector.py      # Volatility/trend classification
+├── ev_analyzer.py          # Expected value, Kelly sizing
+├── capacity_tester.py      # Position size stress tests
+├── visualizer.py           # Charts and plots
+├── reporting.py            # Generate final report
+└── run_backtest.py         # Main execution script
+```
+
+CONFIGURATION:
 - Initial capital: $10,000
-- Position size: Dynamic (Kelly Criterion) or Fixed ($100 per trade)
-- Max concurrent positions: 3
-- Slippage: 0.5% base + market impact model
-- Fees: 2% on winning positions
-- Data period: Last 6 months of historical data
-- Minimum edge threshold: 5% probability advantage
-- Regime detection lookback: 50 periods for regime classification
-- Bootstrap iterations: 10,000 for edge validation
-- Capacity test sizes: [100, 500, 1000, 5000, 10000, 50000]
+- Position size: Dynamic (Kelly Criterion) or Fixed ($100)
+- Entry slippage: 2% base + market impact
+- Fees: 2% on wins
+- Min edge threshold: 5%
+- Regime lookback: 96 periods
+- Bootstrap iterations: 10,000
+- Walk-forward: 60-day train, 14-day test
 
-## Output Format
-Generate a comprehensive backtest report including:
-1. Executive summary: overall Sharpe, win rate, max drawdown
-2. Edge validation results: statistical significance, p-values, confidence intervals
-3. Regime performance breakdown: table showing metrics by regime type
-4. Capacity analysis: maximum scalable capital before efficiency degrades
-5. EV calibration: scatter plot of predicted edge vs realized returns
-6. Best and worst trades analysis
-7. Parameter sensitivity analysis
-8. Strategy improvement recommendations based on regime/capacity/edge findings
+CRITICAL RULES:
+- No lookahead bias (only use data available at signal time)
+- All indicators must warm up properly (drop NaN values)
+- Kelly sizing requires minimum 20-trade history
+- Regime filters must be backtested separately (not optimized on full data)
+- Statistical significance required (p < 0.05) for validation
 
-Use clean, modular, well-commented Python code optimized for Antigravity IDE. Include error handling and logging for debugging. Ensure all validation layers can be toggled on/off via configuration.
+═══════════════════════════════════════════════════════════════════════
+
+Use this framework to build a production-ready backtesting system. Prioritize:
+1. Accurate execution simulation (spread + fees)
+2. Statistical edge validation (bootstrap, t-test, IC)
+3. Regime-aware performance analysis
+4. Walk-forward testing to prevent overfitting
+5. Expected value filtering for trade selection
+6. Dynamic position sizing with Kelly Criterion
+
+Target metrics for validation:
+- Sharpe ratio > 2.0
+- Win rate > 55%
+- p-value < 0.05
+- Out-of-sample degradation < 30%
+- Positive EV on >80% of trades
+
+Generate clean, modular Python code optimized for Antigravity IDE. Include comprehensive logging and error handling. Export all results to CSV and JSON for further analysis.
