@@ -1,0 +1,51 @@
+{
+  "strategy": "Q3-Filtered (RSI 43/58 + ADX/ATR, skip minute 30-44)",
+  "generated": "2026-03-06T23:52:51.032657",
+  "data_period": {
+    "start": "2023-02-01 01:00:00",
+    "end": "2026-02-22 22:45:00",
+    "days": 1117
+  },
+  "performance": {
+    "total_trades": 30194,
+    "win_rate": 55.7197,
+    "total_pnl": 2850.12,
+    "expectancy": 0.0944,
+    "profit_factor": 1.209
+  },
+  "risk_adjusted": {
+    "sharpe_ratio": 9.8762,
+    "sortino_ratio": 17.1135,
+    "calmar_ratio": 22.2528,
+    "cagr_pct": 201.9028
+  },
+  "drawdown": {
+    "max_drawdown_pct": -9.0731,
+    "max_drawdown_usd": -26.98,
+    "avg_drawdown_pct": -0.4827,
+    "max_dd_duration_days": 17
+  },
+  "streaks": {
+    "max_win_streak": 19,
+    "max_loss_streak": 14,
+    "avg_win_streak": 2.22,
+    "avg_loss_streak": 1.76
+  },
+  "statistical_significance": {
+    "z_score": 19.8775,
+    "p_value": 0.0,
+    "significant_at_95pct": "True",
+    "significant_at_99pct": "True"
+  },
+  "q3_filter_impact": {
+    "baseline_trades": 40281,
+    "q3_filtered_trades": 30194,
+    "trades_removed": 10087,
+    "removal_pct": 25.04,
+    "win_rate_change": 0.8402,
+    "pnl_change": -275.26,
+    "sharpe_change": 0.4281,
+    "z_test_difference_p_value": 0.026435,
+    "bootstrap_q3_better_pct": 99.1
+  }
+}

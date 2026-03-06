@@ -1,0 +1,319 @@
+═══════════════════════════════════════════════════════════════════════
+Q3 FILTER ANALYSIS — INSTITUTIONAL REPORT
+ALGORITHMIC TRADING STRATEGY — Q3 TIME FILTER EVALUATION
+═══════════════════════════════════════════════════════════════════════
+
+Generated: March 06, 2026 23:52:51
+Classification: CONFIDENTIAL
+Strategy Code: ALPHA-BTC-15M-v2.0 (Q3 Filter Variant)
+
+═══════════════════════════════════════════════════════════════════════
+SECTION 1: STRATEGY DEFINITION
+═══════════════════════════════════════════════════════════════════════
+
+1.1 BASELINE STRATEGY RULES
+────────────────────────────────────────────────────────────────────────
+  Signal Generation:
+    • BUY YES (Long):     RSI(14) < 43
+    • BUY NO  (Short):    RSI(14) > 57
+    • No signal:          43 ≤ RSI ≤ 57
+
+  Quality Filter:
+    • SKIP trade if:      ADX(14) > 25 AND ATR_percentile > 80
+    • Rationale:          Avoid strong-trend + high-volatility regimes
+
+  Execution:
+    • Entry:              At candle close
+    • Settlement:         Next candle close (15 minutes later)
+    • Risk per trade:     ~$1.02 (fixed)
+    • Fees:               1% entry + 1% exit
+
+1.2 Q3 FILTER DEFINITION
+────────────────────────────────────────────────────────────────────────
+  Q3 Block:              Minutes 30–44 of each hour
+  Timestamp Logic:       Trade is Q3 if candle_timestamp.minute ∈ [30, 44]
+  Filter Action:         SKIP (exclude) — Q3 trades are NOT taken
+  Rationale:             Evaluate whether the 30-44 minute block
+                         degrades strategy performance
+
+  For 15-minute candles, this applies to candles opening at :30
+  (which covers the 30:00–44:59 window within each hour).
+
+  Q3 trades in baseline:  10,087 trades
+  Q3 win rate:             52.36%
+  Q3 total P&L:            $275.26
+
+═══════════════════════════════════════════════════════════════════════
+SECTION 2: PERFORMANCE METRICS
+═══════════════════════════════════════════════════════════════════════
+
+2.1 CORE METRICS — Q3-FILTERED STRATEGY
+────────────────────────────────────────────────────────────────────────
+
+  Total Trades:             30,194
+  Winning Trades:           16,824 (55.72%)
+  Losing Trades:            13,370 (44.28%)
+
+  Total P&L:                $2,850.12
+  Gross Profit:             $16,487.52
+  Gross Loss:               -$13,637.40
+
+  Expectancy per Trade:     $0.0944
+  Profit Factor:            1.21
+
+  Average Win:              $0.9800
+  Average Loss:             -$1.0200
+  Largest Win:              $0.9800
+  Largest Loss:             $-1.0200
+
+2.2 RISK-ADJUSTED RETURNS
+────────────────────────────────────────────────────────────────────────
+
+  Sharpe Ratio:             9.88 (annualized)
+  Sortino Ratio:            17.11
+  Calmar Ratio:             22.25 (CAGR / Max DD)
+  CAGR:                     201.9%
+
+2.3 DRAWDOWN ANALYSIS
+────────────────────────────────────────────────────────────────────────
+
+  Maximum Drawdown:         -9.1% ($-26.98)
+  Average Drawdown:         -0.5%
+  Max DD Duration:          17 days
+  Avg DD Duration:          3.0 days
+
+2.4 STREAK ANALYSIS
+────────────────────────────────────────────────────────────────────────
+
+  Longest Winning Streak:   19 trades
+  Longest Losing Streak:    14 trades
+  Average Win Streak:       2.2 trades
+  Average Loss Streak:      1.8 trades
+
+2.5 MONTHLY RETURN CONSISTENCY
+────────────────────────────────────────────────────────────────────────
+
+  Total Months:             37
+  Profitable Months:        37 (100.0%)
+  Losing Months:            0
+  Best Month:               $144.46
+  Worst Month:              $19.84
+  Avg Monthly P&L:          $77.03
+
+2.6 HOUR-OF-DAY PERFORMANCE (Q3-Filtered)
+────────────────────────────────────────────────────────────────────────
+Hour | Trades | Win%  | P&L
+-----|--------|-------|------
+00   | 1,057  | 57.9 % | $146 
+01   | 1,156  | 59.7 % | $201 
+02   | 1,151  | 56.4 % | $124 
+03   | 1,173  | 56.2 % | $122 
+04   | 1,158  | 55.9 % | $113 
+05   | 1,264  | 56.0 % | $127 
+06   | 1,403  | 56.6 % | $157 
+07   | 1,539  | 52.2 % | $36  
+08   | 1,562  | 56.5 % | $171 
+09   | 1,494  | 54.2 % | $96  
+10   | 1,486  | 55.2 % | $126 
+11   | 1,472  | 54.1 % | $93  
+12   | 1,477  | 54.5 % | $103 
+13   | 1,505  | 56.9 % | $177 
+14   | 1,447  | 54.0 % | $86  
+15   | 1,205  | 51.7 % | $17  
+16   | 981    | 56.6 % | $109 
+17   | 945    | 54.4 % | $64  
+18   | 1,066  | 55.4 % | $95  
+19   | 1,159  | 54.0 % | $70  
+20   | 1,160  | 58.1 % | $165 
+21   | 1,093  | 57.3 % | $137 
+22   | 1,128  | 55.5 % | $101 
+23   | 1,113  | 60.6 % | $215 
+
+2.7 DAY-OF-WEEK PERFORMANCE (Q3-Filtered)
+────────────────────────────────────────────────────────────────────────
+Day       | Trades | Win%  | P&L
+----------|--------|-------|-------
+Monday    | 3,885  | 55.5 % | $347 
+Tuesday   | 4,539  | 54.9 % | $352 
+Wednesday | 4,645  | 54.7 % | $344 
+Thursday  | 4,733  | 54.3 % | $314 
+Friday    | 4,572  | 55.3 % | $397 
+Saturday  | 3,932  | 59.7 % | $685 
+Sunday    | 3,888  | 56.3 % | $410 
+
+═══════════════════════════════════════════════════════════════════════
+SECTION 3: BASELINE vs Q3-FILTERED COMPARISON
+═══════════════════════════════════════════════════════════════════════
+
+3.1 SIDE-BY-SIDE METRICS
+────────────────────────────────────────────────────────────────────────
+
+Metric                    | Baseline       | Q3-Filtered    | Delta
+--------------------------|----------------|----------------|------------------
+Total Trades              | 40,281         | 30,194         | -10,087 ▼ (better)
+Win Rate                  | 54.88        % | 55.72        % | +0.84 ▲ (better)
+Total P&L                 | $3,125.38      | $2,850.12      | -275.26 ▼ (worse)
+Expectancy                | $0.0776        | $0.0944        | +0.0168 ▲ (better)
+Profit Factor             | 1.17           | 1.21           | +0.04 ▲ (better)
+Sharpe Ratio              | 9.45           | 9.88           | +0.43 ▲ (better)
+Sortino Ratio             | 16.66          | 17.11          | +0.45 ▲ (better)
+Calmar Ratio              | 22.86          | 22.25          | -0.61 ▼ (worse)
+Max Drawdown              | -9.2         % | -9.1         % | +0.1 ▲ (worse)
+Avg Drawdown              | -0.6         % | -0.5         % | +0.1 ▲ (worse)
+Max DD Duration           | 18             | 17             | -1 ▼ (better) days
+Max Win Streak            | 18             | 19             | +1 ▲ (better)
+Max Loss Streak           | 11             | 14             | +3 ▲ (worse)
+Profitable Months         | 37             | 37             | +0 ─
+Best Month                | $188.48        | $144.46        | -44.02 ▼ (worse)
+Worst Month               | $12.94         | $19.84         | +6.90 ▲ (worse)
+
+3.2 IMPACT SUMMARY
+────────────────────────────────────────────────────────────────────────
+
+  Trades Removed:           10,087 (25.0% of baseline)
+  Win Rate Change:          +0.84 ▲ (better)%
+  P&L Change:               -275.26 ▼ (worse)
+  Sharpe Change:            +0.43 ▲ (better)
+  Max DD Change:            +0.1 ▲ (worse)%
+  Trade Frequency Change:   -273 ▼ (better) trades/month
+
+3.3 Q3-ONLY TRADE ANALYSIS (Trades That Were Removed)
+────────────────────────────────────────────────────────────────────────
+
+  Q3-Only Trades:           10,087
+  Q3-Only Win Rate:         52.36%
+  Q3-Only Total P&L:        $275.26
+  Q3-Only Expectancy:       $0.0273 per trade
+  
+  vs Baseline WR:           -2.52%
+  vs Baseline Expectancy:   -0.0503
+  
+  Interpretation:           Q3 trades UNDERPERFORM baseline — filtering improves quality
+
+═══════════════════════════════════════════════════════════════════════
+SECTION 4: STATISTICAL DEPTH
+═══════════════════════════════════════════════════════════════════════
+
+4.1 WIN RATE SIGNIFICANCE TESTING
+────────────────────────────────────────────────────────────────────────
+
+  Baseline Win Rate:        54.88% (n=40,281)
+  Q3-Filtered Win Rate:     55.72% (n=30,194)
+  
+  Difference:               +0.84%
+  
+  Z-Test for Difference:
+    Z-statistic:            2.2198
+    P-value:                0.026435
+    Significance:           Significant at 95%
+    Conclusion:             The win rate difference is statistically significant
+
+4.2 BOOTSTRAP RESAMPLING COMPARISON (1,000 iterations)
+────────────────────────────────────────────────────────────────────────
+
+  Mean P&L per Trade Comparison:
+    Baseline 95% CI:        [$0.0674, $0.0872]
+    Q3-Filtered 95% CI:     [$0.0819, $0.1045]
+    
+  Difference (Q3 - Baseline):
+    95% CI:                 [$0.0023, $0.0315]
+    Q3 Better:              99.1% of bootstrap samples
+    Conclusion:             Q3 filter consistently improves mean P&L
+
+  Win Rate Confidence Intervals:
+    Baseline WR CI:         [54.39%, 55.35%]
+    Q3-Filtered WR CI:      [55.15%, 56.26%]
+    CIs Overlap:            Yes — difference may not be meaningful
+
+4.3 REGIME ANALYSIS
+────────────────────────────────────────────────────────────────────────
+
+Volatility x Trend Win Rate (Q3-Filtered):
+Vol/Trend    | Weak         | Medium       | Strong
+-------------|--------------|--------------|-------------
+Low          |  57.5% (2,055) |  56.5% (6,639) |  55.0% (4,714) |
+Medium       |  58.7% (630) |  55.7% (4,825) |  55.1% (9,041) |
+High         |  61.1% (149) |  54.6% (2,141) |          N/A |
+
+4.4 TRADE OUTCOME DISTRIBUTION
+────────────────────────────────────────────────────────────────────────
+
+  Baseline P&L Distribution:
+    Mean:                   $0.0776
+    Std Dev:                $0.9952
+    Skewness:               -0.1961
+    Kurtosis:               -1.9615
+
+  Q3-Filtered P&L Distribution:
+    Mean:                   $0.0944
+    Std Dev:                $0.9934
+    Skewness:               -0.2303
+    Kurtosis:               -1.9470
+
+  Kolmogorov-Smirnov Test:
+    KS-Statistic:           0.008402
+    P-value:                0.173814
+    Conclusion:             Distributions are NOT significantly different
+
+4.5 MEANINGFUL OR NOISE?
+────────────────────────────────────────────────────────────────────────
+
+  Evidence Summary:
+    Win Rate Z-Test:        ✅ Significant
+    Bootstrap Advantage:    ✅ Q3 better >75% of time: 99.1%
+    Distribution Test:      ❌ Same
+    Q3 Trades WR vs Base:   ✅ Underperform
+
+  Conclusion:               LIKELY MEANINGFUL — Multiple statistical tests support the Q3 filter
+
+═══════════════════════════════════════════════════════════════════════
+SECTION 5: FINAL ASSESSMENT
+═══════════════════════════════════════════════════════════════════════
+
+5.1 VERDICT
+────────────────────────────────────────────────────────────────────────
+
+  Q3 Filter Assessment:     LIKELY MEANINGFUL — Multiple statistical tests support the Q3 filter
+  
+  Evidence Score:           3/4 statistical tests passed
+  
+  Recommendation:           RECOMMENDED — Implement Q3 filter for live trading
+
+5.2 KEY FINDINGS
+────────────────────────────────────────────────────────────────────────
+
+  1. Trade Frequency:       Q3 filter removes 10,087 trades (25.0%)
+  2. Win Rate Impact:       +0.84% (baseline 54.88% → Q3 55.72%)
+  3. P&L Impact:            -275.26 change in total P&L
+  4. Risk Impact:           Max DD +0.1% (baseline -9.2% → Q3 -9.1%)
+  5. Risk-Adjusted:         Sharpe +0.43 (baseline 9.45 → Q3 9.88)
+
+5.3 ASSUMPTIONS & LIMITATIONS
+────────────────────────────────────────────────────────────────────────
+
+  • Q3 definition uses candle open timestamp (minute 30-44)
+  • Analysis assumes identical execution quality across all time blocks
+  • Historical patterns may not persist in future
+  • Removal of trades reduces sample size, which may affect significance
+  • Market microstructure at specific minute marks may vary
+  • This is a single-dimension filter — interaction effects not tested
+
+5.4 RECOMMENDATION
+────────────────────────────────────────────────────────────────────────
+
+  RECOMMENDED — Implement Q3 filter for live trading
+  
+  If implementing: Apply Q3 filter as a simple timestamp check before trade execution.
+  Monitor live performance for at least 30 days to confirm backtest alignment.
+
+═══════════════════════════════════════════════════════════════════════
+DISCLAIMER
+═══════════════════════════════════════════════════════════════════════
+
+Past performance does not guarantee future results. This analysis is
+based on historical backtest data and assumes perfect execution without
+slippage, latency, or market impact. Live trading results may differ.
+
+═══════════════════════════════════════════════════════════════════════
+END OF Q3 FILTER ANALYSIS REPORT
+═══════════════════════════════════════════════════════════════════════

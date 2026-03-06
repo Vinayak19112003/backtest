@@ -68,6 +68,8 @@ python scripts/01_generate_performance_report.py     # Performance metrics
 python scripts/02_generate_fixed_capital_analysis.py  # Capital management
 python scripts/03_generate_forensic_validation.py     # Statistical tests
 python scripts/04_generate_visualizations.py          # 26 charts
+python scripts/05_generate_q3_filter_analysis.py      # Q3 filtered metrics
+python scripts/06_generate_q3_filter_visualizations.py # 6 Q3 charts
 ```
 
 ## 📈 Analysis Components
@@ -106,6 +108,14 @@ Institutional-grade statistical validation with **8-test scorecard**:
 - Regime performance heatmaps (9 vol×trend combos)
 - Monte Carlo paths, bootstrap distributions, Q-Q plot
 - Win/loss streak distributions, hourly/weekly patterns
+
+### 5. Q3 Filter Analysis 🔬
+An optional standalone track evaluating the removal of the 30–44 minute block from trading:
+- Dual-simulation (baseline vs Q3-filtered)
+- Full metrics comparison and statistical testing (Z-test, Bootstrap, KS-test)
+- 8 unique reports in `reports/q3_filter/`
+- 6 comparative charts in `visualizations/q3_filter/`
+- Run with `--include-q3` opt-in flag
 
 ## 🔒 Confidentiality
 

@@ -1,0 +1,16 @@
+Q3 FILTER VISUALIZATION SUITE — GENERATION SUMMARY
+==================================================
+Generated: March 06, 2026 23:52
+Total Charts: 6
+Output Directory: F:\backtest\visualizations\q3_filter
+Duration: 11.3 seconds
+
+CHART INDEX:
+01. Equity Curve — Baseline vs Q3-Filtered
+02. Q3-Filtered Drawdown (equity + underwater)
+03. Q3-Filtered Monthly Returns Heatmap
+04. Hourly Performance — Baseline vs Q3
+05. Key Metrics Comparison (6 panels)
+06. Trade P&L Distribution Comparison
+
+Classification: CONFIDENTIAL

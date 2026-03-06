@@ -26,6 +26,11 @@ SCRIPTS = [
     ("04_generate_visualizations.py",         "Visualization Suite",      "visualizations"),
 ]
 
+Q3_SCRIPTS = [
+    ("05_generate_q3_filter_analysis.py",     "Q3 Filter Analysis",       "reports/q3_filter"),
+    ("06_generate_q3_filter_visualizations.py", "Q3 Visualizations",      "visualizations/q3_filter"),
+]
+
 HELP_TEXT = """
 ═══════════════════════════════════════════════════════════════════════
   QUANTITATIVE ANALYSIS SUITE — USAGE
@@ -37,11 +42,18 @@ HELP_TEXT = """
   python scripts/00_run_complete_analysis.py --forensic-only Forensic validation only
   python scripts/00_run_complete_analysis.py --help       Show this message
 
+  Options:
+    --include-q3                           Run standalone Q3 Filter Analysis
+
   Scripts:
     01 — Performance Report:       Core backtest metrics & statistics
     02 — Fixed Capital Analysis:   $100 capital with monthly withdrawals
     03 — Forensic Validation:      Monte Carlo, bootstrap, walk-forward, etc.
     04 — Visualization Suite:      26 professional charts (PNG)
+  
+  Q3 Filter Scripts (if --include-q3):
+    05 — Q3 Filter Analysis:       Standalone Q3 filtered metrics & reports
+    06 — Q3 Visualizations:        6 comparative charts evaluating Q3 filter
 
 ═══════════════════════════════════════════════════════════════════════
 """
@@ -157,6 +169,11 @@ OUTPUT FILES:
         pngs = [f for f in os.listdir(viz_dir) if f.endswith('.png')]
         summary += f"\n  Visualizations: {len(pngs)} charts in visualizations/\n"
 
+    q3_viz_dir = os.path.join(BASE_DIR, "visualizations", "q3_filter")
+    if os.path.exists(q3_viz_dir):
+        q3_pngs = [f for f in os.listdir(q3_viz_dir) if f.endswith('.png')]
+        summary += f"  Q3 Visualizations: {len(q3_pngs)} charts in visualizations/q3_filter/\n"
+
     summary += f"""
 ═══════════════════════════════════════════════════════════════════════
   Classification: CONFIDENTIAL
@@ -188,6 +205,9 @@ def main():
         scripts_to_run = SCRIPTS[:3]   # Skip visualizations
     else:
         scripts_to_run = SCRIPTS[:]    # All
+
+    if '--include-q3' in args:
+        scripts_to_run.extend(Q3_SCRIPTS)
 
     print_header()
 

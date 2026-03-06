@@ -1,26 +1,36 @@
 ═══════════════════════════════════════════════════════════════════════
 MASTER ANALYSIS SUMMARY
 ═══════════════════════════════════════════════════════════════════════
-Generated: March 06, 2026 00:02:33
-Total Duration: 48.6 seconds
+Generated: March 06, 2026 23:53:34
+Total Duration: 29.1 seconds
 
 EXECUTION RESULTS:
 ──────────────────────────────────────────────────────────────────────
-  ✅ Performance Report                     4.6s  OK
-  ✅ Fixed Capital Analysis                15.1s  OK
-  ✅ Forensic Validation                   28.9s  OK
+  ✅ Performance Report                     5.8s  OK
+  ✅ Fixed Capital Analysis                23.3s  OK
 
 ──────────────────────────────────────────────────────────────────────
-  Passed: 3/3
+  Passed: 2/2
   Status: ALL COMPLETE
 
 OUTPUT FILES:
 ──────────────────────────────────────────────────────────────────────
-  reports\MASTER_SUMMARY.txt                                 2,271 bytes
-  reports\analysis_log.txt                                   5,875 bytes
+  reports\MASTER_SUMMARY.txt                                 2,282 bytes
+  reports\analysis_log.txt                                   1,212 bytes
   reports\fixed_capital\section_xiv_fixed_capital_analysis.txt   19,872 bytes
   reports\forensic_validation\forensic_validation_report.txt   19,752 bytes
   reports\performance\institutional_performance_report.txt   15,261 bytes
+  reports\q3_filter\Q3_FILTER_SUMMARY.txt                   18,248 bytes
+  reports\q3_filter\q3_filter_daily_metrics.csv             99,732 bytes
+  reports\q3_filter\q3_filter_drawdown_analysis.csv          1,321 bytes
+  reports\q3_filter\q3_filter_hourly_metrics.csv             1,985 bytes
+  reports\q3_filter\q3_filter_monthly_metrics.csv            3,145 bytes
+  reports\q3_filter\q3_filter_regime_analysis.csv              777 bytes
+  reports\q3_filter\q3_filter_risk_metrics.json              1,315 bytes
+  reports\q3_filter\q3_filter_trade_log.csv               1,998,844 bytes
+
+  Visualizations: 26 charts in visualizations/
+  Q3 Visualizations: 6 charts in visualizations/q3_filter/
 
 ═══════════════════════════════════════════════════════════════════════
   Classification: CONFIDENTIAL
