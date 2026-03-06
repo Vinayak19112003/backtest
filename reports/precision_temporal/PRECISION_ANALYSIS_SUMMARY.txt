@@ -1,0 +1,83 @@
+═══════════════════════════════════════════════════════════════════════
+ULTRA-PRECISION TEMPORAL ANALYTICS ENGINE — MASTER REPORT
+ALGORITHMIC TRADING STRATEGY — ALPHA-BTC-15M-v2.0
+═══════════════════════════════════════════════════════════════════════
+
+Generated: March 07, 2026 00:27:09
+Baseline Context: 40,281 trades | 54.88% Win Rate | $3,125.38 Total P&L
+Significance Models: Wilson Score Interval | Z-Test | p < 0.05
+
+═══════════════════════════════════════════════════════════════════════
+1. EXECUTIVE SUMMARY (Top 10 / Bottom 10 Micro-Slots)
+═══════════════════════════════════════════════════════════════════════
+
+BEST 10 HOUR×DAY×QUARTER (N>=30):
+Hour | Day       | Qtr | Trades | WR %   | Net P&L  
+01   | Saturday  | Q4  | 44     |  77.27 | $   23.12
+02   | Wednesday | Q2  | 59     |  76.27 | $   29.82
+00   | Friday    | Q2  | 48     |  75.00 | $   23.04
+02   | Wednesday | Q1  | 49     |  73.47 | $   22.02
+23   | Tuesday   | Q4  | 57     |  71.93 | $   23.86
+20   | Saturday  | Q4  | 57     |  71.93 | $   23.86
+17   | Sunday    | Q2  | 39     |  71.79 | $   16.22
+04   | Saturday  | Q2  | 49     |  71.43 | $   20.02
+04   | Saturday  | Q3  | 35     |  71.43 | $   14.30
+08   | Saturday  | Q2  | 56     |  71.43 | $   22.88
+
+WORST 10 HOUR×DAY×QUARTER (N>=30):
+Hour | Day       | Qtr | Trades | WR %   | Net P&L 
+21   | Sunday    | Q3  | 66     |  39.39 | $  -15.32
+10   | Friday    | Q3  | 61     |  39.34 | $  -14.22
+22   | Wednesday | Q4  | 54     |  38.89 | $  -13.08
+14   | Monday    | Q3  | 60     |  38.33 | $  -15.20
+17   | Tuesday   | Q4  | 42     |  38.10 | $  -10.84
+07   | Thursday  | Q1  | 69     |  37.68 | $  -18.38
+18   | Wednesday | Q3  | 54     |  37.04 | $  -15.08
+17   | Thursday  | Q2  | 52     |  34.62 | $  -17.04
+17   | Monday    | Q3  | 44     |  34.09 | $  -14.88
+15   | Monday    | Q2  | 46     |  32.61 | $  -16.92
+
+═══════════════════════════════════════════════════════════════════════
+2. TARGET LIST: BLACKLIST (Avoid List)
+═══════════════════════════════════════════════════════════════════════
+There are EXACTLY 33 trading blocks displaying statistically 
+significant underperformance (WR < 50%, N >= 30, p < 0.05).
+- Trades mapped to Blacklist: 2,175
+- Blacklist Net P&L:          $-458.50
+> Removing this exact blacklist would theoretically boost WR to 55.70%
+
+═══════════════════════════════════════════════════════════════════════
+3. TARGET LIST: WHITELIST (Alpha List)
+═══════════════════════════════════════════════════════════════════════
+There are EXACTLY 25 trading blocks displaying statistically 
+significant ALHPA generating attributes (WR > 58%, N >= 30, p < 0.05).
+- Trades mapped to Whitelist: 1,422
+- Whitelist Net P&L:          $541.56
+> Over-allocating margin parameters dynamically during these exact windows 
+  is mathematically sound.
+
+═══════════════════════════════════════════════════════════════════════
+4. FILTER RECOMMENDATIONS (Simulation Results)
+═══════════════════════════════════════════════════════════════════════
+Of the 10 iterative filter backtests, here are the dominant impact metrics:
+
+- Model: 1_Cut_Bottom_5_Pct_Slots  | New WR: 55.65% | P&L: $3564.20 | Impact: 0.157
+- Model: 2_Cut_Bottom_10_Pct_Slots | New WR: 56.33% | P&L: $3852.92 | Impact: 0.141
+- Model: 3_Cut_Bottom_15_Pct_Slots | New WR: 56.86% | P&L: $4012.26 | Impact: 0.132
+- Model: 4_Cut_Bottom_20_Pct_Slots | New WR: 57.44% | P&L: $4133.88 | Impact: 0.126
+- Model: 5_Cut_Bottom_25_Pct_Slots | New WR: 57.98% | P&L: $4192.70 | Impact: 0.122
+- Model: 6_Cut_WR_LT_50            | New WR: 57.73% | P&L: $4172.78 | Impact: 0.124
+- Model: 7_Cut_WR_LT_52            | New WR: 58.79% | P&L: $4196.18 | Impact: 0.118
+- Model: 8_Cut_WR_LT_54            | New WR: 60.28% | P&L: $3976.62 | Impact: 0.115
+- Model: 9_KEEP_ONLY_Top_20_Pct    | New WR: 65.50% | P&L: $2155.36 | Impact: 0.130
+- Model: 10_KEEP_ONLY_Top_30_Pct   | New WR: 63.66% | P&L: $2927.74 | Impact: 0.123
+
+═══════════════════════════════════════════════════════════════════════
+5. STABILITY & FINAL CONCLUSION
+═══════════════════════════════════════════════════════════════════════
+Look via `slot_stability_analysis.csv` to ensure structural features 
+retained strong regime resilience inside Years 1 and 2 explicitly before 
+blindly loading the Blacklist into production filters.
+
+> RECOMMENDATION: The highest edge is achieved by extracting the precise 
+> BLACKLIST.csv matrix coordinates into your exchange API execution code.

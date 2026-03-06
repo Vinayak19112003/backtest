@@ -1,9 +1,9 @@
 VISUALIZATION SUITE — GENERATION SUMMARY
 ==================================================
-Generated: March 06, 2026 00:03
+Generated: March 07, 2026 00:26
 Total Charts: 26
 Output Directory: F:\backtest\visualizations
-Duration: 14.7 seconds
+Duration: 16.1 seconds
 
 CHART INDEX:
 01. Cumulative P&L Equity Curve

@@ -31,6 +31,15 @@ Q3_SCRIPTS = [
     ("06_generate_q3_filter_visualizations.py", "Q3 Visualizations",      "visualizations/q3_filter"),
 ]
 
+TEMPORAL_SCRIPTS = [
+    ("07_generate_temporal_optimization.py",  "Temporal Optimization",    "reports/temporal_optimization"),
+    ("08_generate_temporal_visualizations.py", "Temporal Visualizations", "visualizations/temporal_optimization"),
+]
+
+PRECISION_SCRIPTS = [
+    ("09_generate_precision_temporal_analysis.py", "Precision Temporal Analytics", "reports/precision_temporal"),
+]
+
 HELP_TEXT = """
 ═══════════════════════════════════════════════════════════════════════
   QUANTITATIVE ANALYSIS SUITE — USAGE
@@ -44,6 +53,8 @@ HELP_TEXT = """
 
   Options:
     --include-q3                           Run standalone Q3 Filter Analysis
+    --include-temporal                     Run Temporal Optimization Analysis
+    --include-precision                    Run Ultra-Precision Temporal Engine
 
   Scripts:
     01 — Performance Report:       Core backtest metrics & statistics
@@ -54,6 +65,13 @@ HELP_TEXT = """
   Q3 Filter Scripts (if --include-q3):
     05 — Q3 Filter Analysis:       Standalone Q3 filtered metrics & reports
     06 — Q3 Visualizations:        6 comparative charts evaluating Q3 filter
+
+  Temporal Optimization Scripts (if --include-temporal):
+    07 — Temporal Optimization:    Performance isolated by Hour/Day/Quarter
+    08 — Temporal Visualizations:  7 heatmaps and distribution charts
+
+  Precision Analytics Scripts (if --include-precision):
+    09 — Precision Temporal:       Z-scores, rolling stability, and filter simulators
 
 ═══════════════════════════════════════════════════════════════════════
 """
@@ -174,6 +192,16 @@ OUTPUT FILES:
         q3_pngs = [f for f in os.listdir(q3_viz_dir) if f.endswith('.png')]
         summary += f"  Q3 Visualizations: {len(q3_pngs)} charts in visualizations/q3_filter/\n"
 
+    temporal_viz_dir = os.path.join(BASE_DIR, "visualizations", "temporal_optimization")
+    if os.path.exists(temporal_viz_dir):
+        t_pngs = [f for f in os.listdir(temporal_viz_dir) if f.endswith('.png')]
+        summary += f"  Temporal Visualizations: {len(t_pngs)} charts in visualizations/temporal_optimization/\n"
+
+    precision_dir = os.path.join(BASE_DIR, "reports", "precision_temporal")
+    if os.path.exists(precision_dir):
+        p_csvs = [f for f in os.listdir(precision_dir) if f.endswith('.csv')]
+        summary += f"  Precision Analytics:   {len(p_csvs)} matrices in reports/precision_temporal/\n"
+
     summary += f"""
 ═══════════════════════════════════════════════════════════════════════
   Classification: CONFIDENTIAL
@@ -208,6 +236,12 @@ def main():
 
     if '--include-q3' in args:
         scripts_to_run.extend(Q3_SCRIPTS)
+        
+    if '--include-temporal' in args:
+        scripts_to_run.extend(TEMPORAL_SCRIPTS)
+        
+    if '--include-precision' in args:
+        scripts_to_run.extend(PRECISION_SCRIPTS)
 
     print_header()
 

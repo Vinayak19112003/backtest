@@ -1,0 +1,15 @@
+current_day,prev_day,prev_was_profitable,trades,wins,win_rate
+Friday,Thursday,False,2161,1165,53.91022674687645
+Friday,Thursday,True,3931,2158,54.89697278046298
+Monday,Sunday,False,1691,891,52.69071555292726
+Monday,Sunday,True,3527,1949,55.259427275304795
+Saturday,Friday,False,1541,903,58.59831278390656
+Saturday,Friday,True,3709,2197,59.234294958209766
+Sunday,Saturday,False,764,428,56.02094240837696
+Sunday,Saturday,True,4399,2406,54.69424869288475
+Thursday,Wednesday,False,1836,997,54.30283224400871
+Thursday,Wednesday,True,4471,2398,53.6345336613733
+Tuesday,Monday,False,2173,1188,54.67096180395766
+Tuesday,Monday,True,3895,2093,53.73555840821565
+Wednesday,Tuesday,False,1751,969,55.33980582524271
+Wednesday,Tuesday,True,4390,2340,53.30296127562642

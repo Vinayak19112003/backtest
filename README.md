@@ -70,6 +70,9 @@ python scripts/03_generate_forensic_validation.py     # Statistical tests
 python scripts/04_generate_visualizations.py          # 26 charts
 python scripts/05_generate_q3_filter_analysis.py      # Q3 filtered metrics
 python scripts/06_generate_q3_filter_visualizations.py # 6 Q3 charts
+python scripts/07_generate_temporal_optimization.py   # Hour/Day grouping metrics
+python scripts/08_generate_temporal_visualizations.py # 7 Temporal heatmaps
+python scripts/09_generate_precision_temporal_analysis.py # Deep Z-score matrices
 ```
 
 ## 📈 Analysis Components
@@ -116,6 +119,24 @@ An optional standalone track evaluating the removal of the 30–44 minute block 
 - 8 unique reports in `reports/q3_filter/`
 - 6 comparative charts in `visualizations/q3_filter/`
 - Run with `--include-q3` opt-in flag
+
+### 6. Temporal Optimization 🕒
+An optional analysis mapping systematic edges based purely on time vectors:
+- Slices the simulation explicitly into Hour, Day of Week, and 15m Quarter models
+- Derives 6 dimensional matrices linking multiple time features (Hour × Day, Quarter × Hour, etc.)
+- Isolates and predicts P&L differences from including or removing Top 20% vs Bottom 20% trading configurations
+- 7 specialized aggregated data files inside `reports/temporal_optimization/`
+- 7 custom heatmaps and correlation distributions visually pinpointing clusters of optimal performance in `visualizations/temporal_optimization/`
+- Run with `--include-temporal` opt-in flag
+
+### 7. Precision Temporal Engine 🎯
+An ultra-precision analytical suite extending temporal analysis to generate exact deployment lists via rigorous statistics:
+- **Z-Score & P-Values:** Parametric calculation matching multi-dimensional time vectors against the baseline strategy.
+- **Rolling Multi-Year Stability:** Traverses YoY variance identifying historically resilient vs regime-sensitive blocks.
+- **Sequential Pattern Maps:** Maps hour-to-hour transition edge scenarios.
+- **Simulation Harness:** Brute-force evaluates 10 exact dynamic parameters (cut bottom 5%, keep top 20%, etc).
+- **Final Output:** Mathematical `WHITELIST.csv` and `BLACKLIST.csv` of time slots carrying statistical significance beyond noise `(p<0.05)`.
+- Drops 12 hyper-specific matrices via the `--include-precision` CLI flag.
 
 ## 🔒 Confidentiality
 
