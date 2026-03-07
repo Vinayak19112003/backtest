@@ -1,0 +1,35 @@
+DATA QUALITY AUDIT SUMMARY
+Generated: 2026-03-07 13:52:55 UTC
+
+BACKTEST TYPE: Polymarket 15-minute BTC UP/DOWN prediction
+DATA PERIOD: Feb 2023 - Feb 2026 (3.1 years)
+
+OVERALL STATUS: ISSUES FOUND
+
+FILES SCANNED: 68
+FILES WITH ISSUES: 15
+TOTAL ISSUES: 17
+
+BY SEVERITY:
+- Critical: 2 (blocks analysis)
+- Warning: 15 (may affect accuracy)
+- Info: 0 (minor inconsistencies)
+
+BY TYPE:
+- NaN values: 15
+- Infinite values: 0
+- Missing columns: 0
+- Type errors: 2
+- Logic errors: 0
+- Calculation errors: 0
+
+TOP 5 FILES WITH MOST ISSUES:
+1. reports/exhaustive_filter_analysis/02_risk_metrics.csv - 2 issues
+2. reports/exhaustive_filter_analysis/10_comparative_matrix.csv - 2 issues
+3. reports/exhaustive_filter_analysis/12_trades_00_Baseline.csv - 1 issues
+4. reports/exhaustive_filter_analysis/12_trades_01_Cut_Bottom_5_Pct.csv - 1 issues
+5. reports/exhaustive_filter_analysis/12_trades_02_Cut_Bottom_10_Pct.csv - 1 issues
+
+RECOMMENDED ACTIONS:
+- Recompute NaN fields from source metrics or enforce denominator guards.
+- Normalize datatypes for dates, numeric fields, and categorical direction labels.
