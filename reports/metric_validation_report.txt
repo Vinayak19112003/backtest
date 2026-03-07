@@ -1,0 +1,20 @@
+METRIC VALIDATION REPORT
+Generated: 2026-03-07 14:01:42 UTC
+
+Backtest: Polymarket 15m BTC UP/DOWN prediction
+Validation target: Drawdown, Sharpe, Sortino, Calmar, Profit Factor, Direction Balance
+
+[PASS] Simple sequence: MaxDD=1.0200, Sharpe=-2.4393, Sortino=-423.5413
+[PASS] All wins: ProfitFactor=inf, Sharpe=947.5856
+[PASS] All losses: ProfitFactor=0.0000, Sharpe=-21.7978
+[PASS] Mixed baseline trade data: Sharpe=9.8862, Sortino=12.1465, MaxDD=34.1600, Calmar=6.1794
+[PASS] Direction balance: YES=3, NO=2
+
+Summary: 5/5 tests passed
+
+Formula Notes:
+- Drawdown = (Peak - Valley) / $100 initial capital
+- Sharpe annualization = sqrt(35,040)
+- Sortino uses downside return std deviation
+- Calmar = CAGR(%) / MaxDrawdown(%)
+- Profit Factor = total wins / absolute total losses
