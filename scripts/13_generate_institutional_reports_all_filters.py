@@ -219,13 +219,13 @@ Basic Metrics:
 Trade Frequency:
   Average Trades/Day:          {safe_val(trades_per_day)}
   Average Trades/Hour:         {safe_val(c_row.get('trades_per_hour',0))}
-  Busiest Day:                 N/A trades
-  Quietest Day:                N/A trades
+  Busiest Day:                 {int(c_row.get('busiest_day_trades',0))} trades
+  Quietest Day:                {int(c_row.get('quietest_day_trades',0))} trades
   Days with Zero Trades:       {int(c_row.get('zero_days_count',0))} ({safe_val(safe_div(c_row.get('zero_days_count',0), 1118)*100)}%)
 
 Signal Distribution:
-  Direction A (Long):          N/A trades (N/A%)
-  Direction B (Short):         N/A trades (N/A%)
+  Direction A (Long):          {int(c_row.get('direction_yes_trades',0))} trades ({safe_val(c_row.get('direction_yes_pct',0))}%)
+  Direction B (Short):         {int(c_row.get('direction_no_trades',0))} trades ({safe_val(c_row.get('direction_no_pct',0))}%)
   Directional Bias:            Balanced
 
 ────────────────────────────────────────────────────────────────────────
@@ -236,7 +236,7 @@ P&L Summary:
   Total P&L:                   ${safe_val(total_pnl)}
   Gross Profit:                ${safe_val(gross_profit)}
   Gross Loss:                  -${safe_val(gross_loss)}
-  Net Trading Fees:            N/A
+  Net Trading Fees:            ${safe_val(c_row.get('total_fees',0))}
   
 Return Metrics:
   Total Return:                +{safe_val(c_row.get('roi_vs_baseline_pct',0), default="0.0")}%
@@ -261,30 +261,34 @@ Profit Distribution:
 
 2.3 RISK METRICS
 
-Drawdown Analysis:
+Drawdown Analysis (Peak-to-Valley / Initial Capital):
   Maximum Drawdown:            {safe_val(max_dd)}% (-${safe_val(max_dd_dols)})
-  Max DD Peak Date:            {c_row.get('max_drawdown_start_date','N/A')}
-  Max DD Valley Date:          {c_row.get('max_drawdown_end_date','N/A')}
-  Max DD Duration:             {int(c_row.get('max_drawdown_duration_days',0))} days
+  Peak Equity Before DD:       ${safe_val(c_row.get('peak_before_max_dd', 0))}
+  Valley Equity at Max DD:     ${safe_val(c_row.get('valley_at_max_dd', 0))}
+  Max DD Date:                 {c_row.get('max_drawdown_start_date','N/A')}
+  
+  Calculation Method:          Peak-to-Valley / Initial Capital
+  Initial Capital:             $100.00
+  DD Formula:                  (Peak - Valley) / $100 * 100
   
   Average Drawdown:            {safe_val(c_row.get('avg_drawdown_depth',0))}%
   Average DD Duration:         {safe_val(c_row.get('avg_drawdown_duration',0))} days
-  Median Drawdown:             N/A
+  Median Drawdown:             {safe_val(c_row.get('median_drawdown',0))}%
   
-  # of Drawdowns >5%:          N/A
+  # of Drawdowns >5%:          {safe_val(c_row.get('drawdown_5pct_count', 0), fmt='{:.0f}')}
   # of Drawdowns >10%:         {safe_val(c_row.get('drawdown_10pct_count', 0), fmt='{:.0f}')}
   # of Drawdowns >20%:         {safe_val(c_row.get('drawdown_20pct_count', 0), fmt='{:.0f}')}
   
-Underwater Metrics:
-  Days Underwater:             N/A
-  Longest Underwater:          {int(c_row.get('longest_flat_period_days',0))} days
-  Current Status:              {safe_val(c_row.get('current_drawdown_depth',0))}% from high
+Underwater Metrics (from High Water Mark):
+  Days Below High Water Mark:  {int(c_row.get('days_underwater',0))}
+  Longest Period Underwater:   {int(c_row.get('longest_flat_period_days',0))} days
+  Current Status:              {safe_val(c_row.get('current_drawdown_depth',0))}% from peak
   
 Streak Analysis:
   Longest Winning Streak:      {int(c_row.get('max_consecutive_wins',0))} trades
   Longest Losing Streak:       {int(c_row.get('max_consecutive_losses',0))} trades
-  Average Win Streak:          N/A trades
-  Average Loss Streak:         N/A trades
+  Average Win Streak:          {safe_val(c_row.get('avg_win_streak',0))} trades
+  Average Loss Streak:         {safe_val(c_row.get('avg_loss_streak',0))} trades
 
 ────────────────────────────────────────────────────────────────────────
 
@@ -294,16 +298,16 @@ Performance Ratios:
   Sharpe Ratio:                {safe_val(sharpe)} (annualized)
   Sortino Ratio:               {safe_val(c_row.get('sortino_ratio',0))}
   Calmar Ratio:                {safe_val(c_row.get('calmar_ratio',0))}
-  MAR Ratio:                   N/A
+  MAR Ratio:                   {safe_val(c_row.get('mar_ratio',0))}
   
   Profit Factor:               {safe_val(pf)} (Wins / Losses)
   Recovery Factor:             {safe_val(c_row.get('recovery_factor',0))} (Net P&L / Max DD)
   Payoff Ratio:                {safe_val(c_row.get('avg_win_loss_ratio',0))} (Avg Win / Avg Loss)
   
 Volatility Metrics:
-  Daily P&L Std Dev:           N/A
-  Monthly P&L Std Dev:         N/A
-  Annualized Volatility:       N/A
+  Daily P&L Std Dev:           ${safe_val(c_row.get('daily_pnl_std',0))}
+  Monthly P&L Std Dev:         ${safe_val(c_row.get('monthly_pnl_std',0))}
+  Annualized Volatility:       {safe_val(c_row.get('annualized_volatility',0))}%
 
 Risk/Return Profile:
   Return per Unit Risk:        {safe_val(sharpe)}
@@ -358,8 +362,8 @@ SECTION 4: ROBUSTNESS ANALYSIS
 
 Win Rate Stability:
   3-Year Win Rate:             {safe_val(win_rate)}%
-  First 50% of trades:         N/A
-  Last 50% of trades:          N/A
+  First 50% of trades:         {safe_val(c_row.get('first_50_pct_wr',0))}%
+  Last 50% of trades:          {safe_val(c_row.get('last_50_pct_wr',0))}%
   Conclusion:                  {'Stable' if consist else 'Variable'}
 
 ────────────────────────────────────────────────────────────────────────
@@ -416,10 +420,10 @@ Risk Assessment:
 5.2 TRADE SEQUENCING (Independence Test)
 
 Win-Loss Patterns:
-  Win-after-Win:               N/A
-  Loss-after-Loss:             N/A
-  Win-after-Loss:              N/A
-  Loss-after-Win:              N/A
+  Win-after-Win:               {safe_val(tr_row.get('win_after_win_pct',0))}%
+  Loss-after-Loss:             {safe_val(tr_row.get('loss_after_loss_pct',0))}%
+  Win-after-Loss:              {safe_val(tr_row.get('win_after_loss_pct',0))}%
+  Loss-after-Win:              {safe_val(tr_row.get('loss_after_win_pct',0))}%
   
   Conclusion:                  Assumed Independent
 
@@ -463,7 +467,7 @@ Performance vs Baseline:
   Win Rate Change:             {"+"+safe_val(c_row.get('win_rate_improvement_vs_baseline',0)) if c_row.get('win_rate_improvement_vs_baseline',0)>0 else safe_val(c_row.get('win_rate_improvement_vs_baseline',0))} percentage points
   P&L Improvement:             {"+$"+safe_val(c_row.get('pnl_improvement_vs_baseline',0)) if c_row.get('pnl_improvement_vs_baseline',0)>0 else "-$"+safe_val(abs(c_row.get('pnl_improvement_vs_baseline',0)))} (+{safe_val(c_row.get('roi_vs_baseline_pct',0))}%)
   Sharpe Improvement:          {safe_val(c_row.get('incremental_sharpe',0))}
-  Drawdown Change:             N/A
+  Drawdown Change:             {"+"+safe_val(c_row.get('drawdown_improvement_vs_baseline',0)) if c_row.get('drawdown_improvement_vs_baseline',0)>0 else safe_val(c_row.get('drawdown_improvement_vs_baseline',0))} percentage points
   
 Trade Efficiency:
   Trades Removed:              {int(c_row.get('trades_removed_count',0))} ({safe_val(c_row.get('trades_removed_pct',0))}%)

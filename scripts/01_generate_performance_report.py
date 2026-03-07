@@ -152,15 +152,21 @@ pf = gross_prof / gross_loss if gross_loss > 0 else 999
 
 daily_pnl = tdf['pnl'].resample('1D').sum().fillna(0)
 daily_cap = INITIAL_CAPITAL + daily_pnl.cumsum()
-roll_max = daily_cap.cummax()
-dd_usd = daily_cap - roll_max
-dd_pct = (dd_usd / roll_max) * 100
 
-max_dd_pct = dd_pct.min()
-max_dd_peak_idx = roll_max[dd_pct == max_dd_pct].index[0] if len(roll_max[dd_pct == max_dd_pct])>0 else daily_cap.index[0]
-max_dd_valley_idx = dd_pct.idxmin()
+# Drawdown is (Peak - Current Equity) / Initial Capital
+peak_cap = daily_cap.expanding().max()
+dd_usd = peak_cap - daily_cap
 
-is_dd = dd_pct < 0
+# Percentage drawdown based on INITIAL_CAPITAL
+dd_pct = (dd_usd / INITIAL_CAPITAL) * 100
+
+max_dd_dollars = dd_usd.max()
+max_dd_pct = dd_pct.max()
+
+max_dd_peak_idx = dd_usd.idxmax() if max_dd_dollars > 0 else daily_cap.index[0]
+max_dd_valley_idx = max_dd_peak_idx
+
+is_dd = dd_pct > 0
 dd_groups = (~is_dd).cumsum()[is_dd]
 max_dd_dur = dd_groups.groupby(dd_groups).apply(len).max() if not dd_groups.empty else 0
 avg_dd_dur = dd_groups.groupby(dd_groups).apply(len).mean() if not dd_groups.empty else 0
@@ -171,8 +177,8 @@ std_daily = daily_pnl.std()
 sharpe = (mean_daily / std_daily) * np.sqrt(365) if std_daily > 0 else 0
 sortino = (mean_daily / daily_pnl[daily_pnl<0].std()) * np.sqrt(365) if daily_pnl[daily_pnl<0].std() > 0 else 0
 cagr = ((daily_cap.iloc[-1] / INITIAL_CAPITAL) ** (1 / (len(daily_pnl)/365)) - 1) * 100
-calmar = cagr / abs(max_dd_pct) if max_dd_pct < 0 else 999
-mar = cagr / abs(max_dd_pct) if max_dd_pct < 0 else 999
+calmar = cagr / max_dd_pct if max_dd_pct > 0 else 999
+mar = cagr / max_dd_pct if max_dd_pct > 0 else 999
 
 # Stats
 avg_win = tdf[tdf['win']==True]['pnl'].mean()
@@ -321,24 +327,27 @@ Profit Distribution:
 
 2.3 RISK METRICS
 
-Drawdown Analysis:
-  Maximum Drawdown:            {max_dd_pct:.1f}% (-${dd_usd.min():.0f})
-  Max DD Peak Date:            {max_dd_peak_idx.strftime('%Y-%m-%d')}
-  Max DD Valley Date:          {max_dd_valley_idx.strftime('%Y-%m-%d')}
-  Max DD Duration:             {max_dd_dur} days
+Drawdown Analysis (Peak-to-Valley / Initial Capital):
+  Maximum Drawdown:            {max_dd_pct:.1f}% (-${max_dd_dollars:.0f})
+  Peak Equity Before DD:       ${peak_cap[max_dd_peak_idx]:.2f}
+  Valley Equity at Max DD:     ${daily_cap[max_dd_peak_idx]:.2f}
+  Max DD Date:                 {max_dd_peak_idx.strftime('%Y-%m-%d')}
   
-  Average Drawdown:            {dd_pct[dd_pct<0].mean():.1f}%
+  Calculation Method:          Peak-to-Valley / Initial Capital
+  Initial Capital:             $100.00
+  DD Formula:                  (Peak - Valley) / $100 * 100
+  
+  Average Drawdown:            {dd_pct[dd_pct>0].mean() if len(dd_pct[dd_pct>0])>0 else 0:.1f}%
   Average DD Duration:         {avg_dd_dur:.1f} days
-  Median Drawdown:             {dd_pct[dd_pct<0].median():.1f}%
+  Median Drawdown:             {dd_pct[dd_pct>0].median() if len(dd_pct[dd_pct>0])>0 else 0:.1f}%
   
-  # of Drawdowns >5%:          {(dd_groups.groupby(dd_groups).apply(lambda x: dd_pct.loc[x.index].min()) < -5).sum()}
-  # of Drawdowns >10%:         {(dd_groups.groupby(dd_groups).apply(lambda x: dd_pct.loc[x.index].min()) < -10).sum()}
-  # of Drawdowns >20%:         {(dd_groups.groupby(dd_groups).apply(lambda x: dd_pct.loc[x.index].min()) < -20).sum()}
+  # of Drawdowns (Any Depth):  {len(dd_groups.unique()) if not dd_groups.empty else 0}
+  Deepest Loss from Peak:      {max_dd_pct:.1f}%
   
-Underwater Metrics:
-  Days Underwater:             {days_uw} days ({days_uw/len(daily_pnl)*100:.1f}% of period)
-  Longest Underwater:          {max_dd_dur} days
-  Current Status:              {dd_pct.iloc[-1]:.1f}% from high
+Underwater Metrics (from High Water Mark):
+  Days Below High Water Mark:  {days_uw} days ({days_uw/len(daily_pnl)*100:.1f}% of period)
+  Longest Period Underwater:   {max_dd_dur} days
+  Current Status:              {dd_pct.iloc[-1]:.1f}% from peak
 
 Streak Analysis:
   Longest Winning Streak:      {max_win_streak} trades
@@ -357,7 +366,7 @@ Performance Ratios:
   MAR Ratio:                   {mar:.2f}
   
   Profit Factor:               {pf:.2f} (Wins / Losses)
-  Recovery Factor:             {abs(total_pnl / dd_usd.min()):.2f} (Net P&L / Max DD)
+  Recovery Factor:             {abs(total_pnl / dd_usd.max()) if dd_usd.max() > 0 else 999.0:.2f} (Net P&L / Max DD)
   Payoff Ratio:                {payoff_ratio:.2f} (Avg Win / Avg Loss)
   
 Volatility Metrics:
@@ -367,7 +376,7 @@ Volatility Metrics:
 
 Risk/Return Profile:
   Return per Unit Risk:        {sharpe:.2f}
-  Return per Unit DD:          {abs(total_pnl / dd_usd.min()):.2f}
+  Return per Unit DD:          {abs(total_pnl / dd_usd.max()) if dd_usd.max() > 0 else 999.0:.2f}
 
 ────────────────────────────────────────────────────────────────────────
 

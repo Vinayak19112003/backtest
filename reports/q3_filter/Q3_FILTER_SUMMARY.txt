@@ -3,7 +3,7 @@ Q3 FILTER ANALYSIS — INSTITUTIONAL REPORT
 ALGORITHMIC TRADING STRATEGY — Q3 TIME FILTER EVALUATION
 ═══════════════════════════════════════════════════════════════════════
 
-Generated: March 06, 2026 23:52:51
+Generated: March 07, 2026 11:23:31
 Classification: CONFIDENTIAL
 Strategy Code: ALPHA-BTC-15M-v2.0 (Q3 Filter Variant)
 
@@ -71,16 +71,16 @@ SECTION 2: PERFORMANCE METRICS
 
   Sharpe Ratio:             9.88 (annualized)
   Sortino Ratio:            17.11
-  Calmar Ratio:             22.25 (CAGR / Max DD)
+  Calmar Ratio:             999.00 (CAGR / Max DD)
   CAGR:                     201.9%
 
 2.3 DRAWDOWN ANALYSIS
 ────────────────────────────────────────────────────────────────────────
 
-  Maximum Drawdown:         -9.1% ($-26.98)
-  Average Drawdown:         -0.5%
-  Max DD Duration:          17 days
-  Avg DD Duration:          3.0 days
+  Maximum Drawdown:         0.0% (-$0.00)
+  Average Drawdown:         0.0%
+  Max DD Duration:          0 days
+  Avg DD Duration:          0.0 days
 
 2.4 STREAK ANALYSIS
 ────────────────────────────────────────────────────────────────────────
@@ -157,10 +157,10 @@ Expectancy                | $0.0776        | $0.0944        | +0.0168 ▲ (bette
 Profit Factor             | 1.17           | 1.21           | +0.04 ▲ (better)
 Sharpe Ratio              | 9.45           | 9.88           | +0.43 ▲ (better)
 Sortino Ratio             | 16.66          | 17.11          | +0.45 ▲ (better)
-Calmar Ratio              | 22.86          | 22.25          | -0.61 ▼ (worse)
-Max Drawdown              | -9.2         % | -9.1         % | +0.1 ▲ (worse)
-Avg Drawdown              | -0.6         % | -0.5         % | +0.1 ▲ (worse)
-Max DD Duration           | 18             | 17             | -1 ▼ (better) days
+Calmar Ratio              | 999.00         | 999.00         | +0.00 ─
+Max Drawdown              | 0.0          % | 0.0          % | +0.0 ─
+Avg Drawdown              | 0.0          % | 0.0          % | +0.0 ─
+Max DD Duration           | 0              | 0              | +0 ─ days
 Max Win Streak            | 18             | 19             | +1 ▲ (better)
 Max Loss Streak           | 11             | 14             | +3 ▲ (worse)
 Profitable Months         | 37             | 37             | +0 ─
@@ -174,7 +174,7 @@ Worst Month               | $12.94         | $19.84         | +6.90 ▲ (worse)
   Win Rate Change:          +0.84 ▲ (better)%
   P&L Change:               -275.26 ▼ (worse)
   Sharpe Change:            +0.43 ▲ (better)
-  Max DD Change:            +0.1 ▲ (worse)%
+  Max DD Change:            +0.0 ─%
   Trade Frequency Change:   -273 ▼ (better) trades/month
 
 3.3 Q3-ONLY TRADE ANALYSIS (Trades That Were Removed)
@@ -285,7 +285,7 @@ SECTION 5: FINAL ASSESSMENT
   1. Trade Frequency:       Q3 filter removes 10,087 trades (25.0%)
   2. Win Rate Impact:       +0.84% (baseline 54.88% → Q3 55.72%)
   3. P&L Impact:            -275.26 change in total P&L
-  4. Risk Impact:           Max DD +0.1% (baseline -9.2% → Q3 -9.1%)
+  4. Risk Impact:           Max DD +0.0% (baseline 0.0% → Q3 0.0%)
   5. Risk-Adjusted:         Sharpe +0.43 (baseline 9.45 → Q3 9.88)
 
 5.3 ASSUMPTIONS & LIMITATIONS

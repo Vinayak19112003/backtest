@@ -1,0 +1,78 @@
+═══════════════════════════════════════════════════════════════════════
+DRAWDOWN CALCULATION METHODOLOGY
+═══════════════════════════════════════════════════════════════════════
+
+Date Updated: March 2026
+Applicable to: All Institutional Reports & Statistical Modules
+
+1. THE PROBLEMATIC LEGACY METHODOLOGY (Peak Equity Anchoring)
+───────────────────────────────────────────────────────────────────────
+Historically, drawdown metrics were calculated relative to the *Peak Equity* 
+(using continuous `cummax()` logic). While standard in some contexts, this 
+led to a significant flaw in assessing True Capital Risk.
+
+Example of the flaw:
+- Initial Capital: $100
+- Run-up (Peak Equity): $200
+- Drop to Valley: $170
+- Legacy Calculation: ($200 - $170) / $200 = 15% Drawdown
+- True Capital Loss: $0 (The account is still $70 in profit)
+
+Because position sizing and risk of ruin are predicated on the INITIAL 
+DEPOSIT, dropping from $200 to $170 does not threaten the original $100 
+trading capital. Calculating risk based on peak equity exaggerated volatility
+in profitable regimes while understating initial deposit risk during bad sequences.
+
+2. THE NEW CORRECTED METHODOLOGY (Absolute Initial Capital Anchoring)
+───────────────────────────────────────────────────────────────────────
+All mathematical engines, statistical tests, and institutional reports 
+now calculate Drawdown strictly against the Fixed Initial Capital base ($100).
+
+Mathematical Definition:
+1. `Equity = Initial Capital + Cumulative PnL`
+2. `Absolute Drawdown ($) = Max(0, Initial Capital - Equity)`
+3. `Drawdown (%) = (Absolute Drawdown ($) / Initial Capital) * 100`
+
+Example of the correct behavior:
+Scenario A (Profit Pullback):
+- Initial Capital: $100
+- Peak Equity: $200
+- Fall to Valley: $170
+- Correct Drawdown Calculation: $170 is >= $100. Drawdown = 0%.
+
+Scenario B (True Loss):
+- Initial Capital: $100
+- Fall to Valley: $70
+- Correct Drawdown Calculation: $100 - $70 = $30. Drawdown = 30%.
+
+3. IMPACT ON METRICS & REPORTS
+───────────────────────────────────────────────────────────────────────
+The adoption of Absolute Initial Capital Anchoring affects several 
+institutional metrics in the reporting framework:
+
+A. Max Drawdown % & $
+   These figures now accurately reflect the MAXIMUM threat to the initial 
+   deposit. A Max DD of 20% means the account dropped to $80 at its worst 
+   point, regardless of any peaks it hit beforehand.
+
+B. Average Drawdown
+   Calculated EXCLUSIVELY from periods where equity < Initial Capital.
+
+C. Drawdown Duration (Time Underwater)
+   This now measures the duration (in days) the account spends below the 
+   Initial Capital line, not the time spent below a rolling peak.
+
+D. Calmar Ratio
+   Now calculated as `CAGR / Max Absolute Drawdown %`. 
+
+E. Monte Carlo Simulations
+   Risk of Ruin (50%) and simulated drawdowns now rigorously reflect the 
+   odds of the initial deposit falling below $50, accurately simulating 
+   stress trajectories.
+
+CONCLUSION
+───────────────────────────────────────────────────────────────────────
+This methodological refinement ensures that risk metrics are structurally 
+aligned with capital preservation objectives, preventing profitable 
+volatility from inflating risk figures, and ensuring drawdowns reflect 
+genuine threats to principal capital.

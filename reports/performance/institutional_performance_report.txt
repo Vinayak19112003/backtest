@@ -53,7 +53,7 @@ KEY RESULTS:
   Win Rate:                 54.88%
   Total P&L:                $3,125.38
   Sharpe Ratio:             9.45
-  Max Drawdown:             -9.2%
+  Max Drawdown:             30.5%
   Profit Factor:            1.17
 
 RATING: A
@@ -117,24 +117,27 @@ Profit Distribution:
 
 2.3 RISK METRICS
 
-Drawdown Analysis:
-  Maximum Drawdown:            -9.2% (-$-31)
-  Max DD Peak Date:            2023-02-23
-  Max DD Valley Date:          2023-02-23
-  Max DD Duration:             18 days
+Drawdown Analysis (Peak-to-Valley / Initial Capital):
+  Maximum Drawdown:            30.5% (-$31)
+  Peak Equity Before DD:       $2387.54
+  Valley Equity at Max DD:     $2357.02
+  Max DD Date:                 2025-03-19
   
-  Average Drawdown:            -0.6%
+  Calculation Method:          Peak-to-Valley / Initial Capital
+  Initial Capital:             $100.00
+  DD Formula:                  (Peak - Valley) / $100 * 100
+  
+  Average Drawdown:            6.5%
   Average DD Duration:         2.9 days
-  Median Drawdown:             -0.3%
+  Median Drawdown:             5.1%
   
-  # of Drawdowns >5%:          4
-  # of Drawdowns >10%:         0
-  # of Drawdowns >20%:         0
+  # of Drawdowns (Any Depth):  176
+  Deepest Loss from Peak:      30.5%
   
-Underwater Metrics:
-  Days Underwater:             519 days (46.4% of period)
-  Longest Underwater:          18 days
-  Current Status:              0.0% from high
+Underwater Metrics (from High Water Mark):
+  Days Below High Water Mark:  519 days (46.4% of period)
+  Longest Period Underwater:   18 days
+  Current Status:              0.0% from peak
 
 Streak Analysis:
   Longest Winning Streak:      18 trades
@@ -149,8 +152,8 @@ Streak Analysis:
 Performance Ratios:
   Sharpe Ratio:                9.45 (annualized)
   Sortino Ratio:               16.66
-  Calmar Ratio:                22.86 (CAGR / Max DD)
-  MAR Ratio:                   22.86
+  Calmar Ratio:                6.91 (CAGR / Max DD)
+  MAR Ratio:                   6.91
   
   Profit Factor:               1.17 (Wins / Losses)
   Recovery Factor:             102.40 (Net P&L / Max DD)
@@ -303,9 +306,9 @@ SECTION 6: RISK ASSESSMENT
 6.1 CAPITAL REQUIREMENTS
 
 Drawdown-Based Sizing:
-  Historical Max DD:           -9.2%
-  Conservative Max DD:         -13.8% (1.5x historical)
-  Extreme Stress DD:           -18.4% (2x historical)
+  Historical Max DD:           30.5%
+  Conservative Max DD:         45.8% (1.5x historical)
+  Extreme Stress DD:           61.0% (2x historical)
 
 ────────────────────────────────────────────────────────────────────────
 

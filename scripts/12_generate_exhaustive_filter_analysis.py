@@ -128,7 +128,8 @@ def run_baseline_sim(df):
             'signal': signal,
             'outcome': 'WIN' if won else 'LOSS',
             'win': won,
-            'pnl': pnl
+            'pnl': pnl,
+            'fees': fees
         })
 
     tdf = pd.DataFrame(trades)
@@ -146,18 +147,24 @@ def calculate_risk_metrics(tdf, strat_name):
     pf = total_profit / total_loss if total_loss > 0 else np.nan
     
     # Drawdown
-    cum_pnl = tdf['pnl'].cumsum() + INITIAL_CAPITAL
-    peaks = cum_pnl.cummax()
-    drawdowns = (cum_pnl - peaks)
-    dd_pct = drawdowns / peaks
-    max_dd_dollars = abs(drawdowns.min())
-    max_dd_pct = abs(dd_pct.min()) * 100
+    equity = INITIAL_CAPITAL + tdf['pnl'].cumsum()
+    peak = equity.expanding().max()
+    dd_usd = peak - equity
+    dd_pct = (dd_usd / INITIAL_CAPITAL) * 100
+    
+    max_dd_idx = dd_usd.idxmax() if not dd_usd.empty else equity.index[0]
+    max_dd_dollars = dd_usd.max() if not dd_usd.empty else 0
+    max_dd_pct = dd_pct.max() if not dd_pct.empty else 0
+    
+    peak_before_max_dd = peak[max_dd_idx]
+    valley_at_max_dd = equity[max_dd_idx]
     
     # Duration approx: grouping by day
     daily_pnl = tdf.groupby(tdf['timestamp'].dt.date)['pnl'].sum()
     cum_daily = daily_pnl.cumsum() + INITIAL_CAPITAL
-    peaks_daily = cum_daily.cummax()
-    in_dd = cum_daily < peaks_daily
+    peak_daily = cum_daily.expanding().max()
+    in_dd = cum_daily < peak_daily
+    
     longest_dd_days = 0
     curr_dd = 0
     for is_dd in in_dd:
@@ -166,6 +173,19 @@ def calculate_risk_metrics(tdf, strat_name):
             longest_dd_days = max(longest_dd_days, curr_dd)
         else:
             curr_dd = 0
+            
+    is_hw = dd_pct == 0
+    dd_groups = (~is_hw).cumsum()[~is_hw]
+    if not dd_groups.empty:
+        dd_max_per_event = dd_pct[~is_hw].groupby(dd_groups).max()
+        dd_5_cnt = len(dd_max_per_event[dd_max_per_event > 5])
+        dd_10_cnt = len(dd_max_per_event[dd_max_per_event > 10])
+        dd_20_cnt = len(dd_max_per_event[dd_max_per_event > 20])
+    else:
+        dd_5_cnt, dd_10_cnt, dd_20_cnt = 0, 0, 0
+        
+    median_dd = dd_pct[dd_pct > 0].median() if len(dd_pct[dd_pct > 0]) > 0 else 0
+    days_underwater = in_dd.sum()
             
     std_pnl = tdf['pnl'].std()
     sharpe = (tdf['pnl'].mean() / std_pnl) * np.sqrt(365) if std_pnl > 0 else np.nan
@@ -176,13 +196,20 @@ def calculate_risk_metrics(tdf, strat_name):
     
     w_streak, l_streak = 0, 0
     cur_w, cur_l = 0, 0
+    win_streaks, loss_streaks = [], []
     for w in tdf['win']:
         if w:
+            if cur_l > 0: loss_streaks.append(cur_l); cur_l = 0
             cur_w += 1; cur_l = 0
             w_streak = max(w_streak, cur_w)
         else:
+            if cur_w > 0: win_streaks.append(cur_w); cur_w = 0
             cur_l += 1; cur_w = 0
             l_streak = max(l_streak, cur_l)
+    if cur_w > 0: win_streaks.append(cur_w)
+    if cur_l > 0: loss_streaks.append(cur_l)
+    avg_w_streak = np.mean(win_streaks) if win_streaks else 0
+    avg_l_streak = np.mean(loss_streaks) if loss_streaks else 0
             
     aw = wins['pnl'].mean() if not wins.empty else 0
     al = abs(losses['pnl'].mean()) if not losses.empty else 0
@@ -200,6 +227,9 @@ def calculate_risk_metrics(tdf, strat_name):
         'calmar_ratio': calmar,
         'max_drawdown_dollars': max_dd_dollars,
         'max_drawdown_pct': max_dd_pct,
+        'peak_before_max_dd': peak_before_max_dd,
+        'valley_at_max_dd': valley_at_max_dd,
+        'max_drawdown_start_date': max_dd_idx.strftime('%Y-%m-%d') if hasattr(max_dd_idx, 'strftime') else 'N/A',
         'longest_drawdown_duration_days': longest_dd_days,
         'max_consecutive_wins': w_streak,
         'max_consecutive_losses': l_streak,
@@ -209,7 +239,17 @@ def calculate_risk_metrics(tdf, strat_name):
         'downside_deviation': sortino_std,
         'upside_deviation': wins['pnl'].std() if not wins.empty else 0,
         'var_95': np.percentile(pnl_arr, 5) if len(pnl_arr) > 0 else 0,
-        'cvar_95': pnl_arr[pnl_arr <= np.percentile(pnl_arr, 5)].mean() if len(pnl_arr) > 0 else 0
+        'cvar_95': pnl_arr[pnl_arr <= np.percentile(pnl_arr, 5)].mean() if len(pnl_arr) > 0 else 0,
+        'median_drawdown': median_dd,
+        'drawdown_5pct_count': dd_5_cnt,
+        'drawdown_10pct_count': dd_10_cnt,
+        'drawdown_20pct_count': dd_20_cnt,
+        'days_underwater': days_underwater,
+        'avg_win_streak': avg_w_streak,
+        'avg_loss_streak': avg_l_streak,
+        'daily_pnl_std': daily_pnl.std() if len(daily_pnl) > 1 else 0,
+        'monthly_pnl_std': tdf.groupby(tdf['timestamp'].dt.to_period('M'))['pnl'].sum().std() if not tdf.empty else 0,
+        'annualized_volatility': (daily_pnl.std() / INITIAL_CAPITAL) * np.sqrt(365) * 100 if len(daily_pnl) > 1 else 0
     }
 
 def calculate_time_metrics(tdf, strat_name):
@@ -234,6 +274,19 @@ def calculate_time_metrics(tdf, strat_name):
 
     q_aggs = tdf.groupby('quarter').agg(wins=('win','sum'), trades=('win','count'))
     q_wr = lambda q: (q_aggs.loc[q,'wins']/q_aggs.loc[q,'trades']*100) if q in q_aggs.index and q_aggs.loc[q,'trades']>0 else 0
+    
+    daily_counts = tdf.groupby(tdf['timestamp'].dt.date).size()
+    busiest_day_trades = daily_counts.max() if not daily_counts.empty else 0
+    quietest_day_trades = daily_counts.min() if not daily_counts.empty else 0
+    zero_days_count = (tdf['timestamp'].max() - tdf['timestamp'].min()).days - len(daily_counts) if len(daily_counts) > 0 else 0
+    if zero_days_count < 0: zero_days_count = 0
+    if zero_days_count > 0: quietest_day_trades = 0
+
+    half = len(tdf) // 2
+    f50 = tdf.iloc[:half]
+    l50 = tdf.iloc[half:]
+    first_wr = (f50['win'].mean() * 100) if len(f50) > 0 else 0
+    last_wr = (l50['win'].mean() * 100) if len(l50) > 0 else 0
     
     return {
         'strategy_name': strat_name,
@@ -261,12 +314,25 @@ def calculate_time_metrics(tdf, strat_name):
         'quarterly_win_rate_q2': q_wr('Q2'),
         'quarterly_win_rate_q3': q_wr('Q3'),
         'quarterly_win_rate_q4': q_wr('Q4'),
+        'busiest_day_trades': busiest_day_trades,
+        'quietest_day_trades': quietest_day_trades,
+        'zero_days_count': zero_days_count,
+        'first_50_pct_wr': first_wr,
+        'last_50_pct_wr': last_wr
     }
 
 def calculate_trade_dist(tdf, strat_name):
     if len(tdf) == 0: return {}
     w = tdf[tdf['pnl']>0]['pnl']
     l = tdf[tdf['pnl']<0]['pnl'].abs()
+    
+    prev_win = tdf['win'].shift(1)
+    ww = len(tdf[(tdf['win'] == True) & (prev_win == True)])
+    lw = len(tdf[(tdf['win'] == False) & (prev_win == True)])
+    wl = len(tdf[(tdf['win'] == True) & (prev_win == False)])
+    ll = len(tdf[(tdf['win'] == False) & (prev_win == False)])
+    tpw = ww + lw
+    tpl = wl + ll
     
     return {
         'strategy_name': strat_name,
@@ -289,6 +355,10 @@ def calculate_trade_dist(tdf, strat_name):
         'pnl_75th_percentile': tdf['pnl'].quantile(0.75),
         'pnl_90th_percentile': tdf['pnl'].quantile(0.90),
         'pnl_99th_percentile': tdf['pnl'].quantile(0.99),
+        'win_after_win_pct': (ww/tpw*100) if tpw>0 else 0,
+        'loss_after_win_pct': (lw/tpw*100) if tpw>0 else 0,
+        'win_after_loss_pct': (wl/tpl*100) if tpl>0 else 0,
+        'loss_after_loss_pct': (ll/tpl*100) if tpl>0 else 0
     }
 
 def run_monte_carlo(tdf, strat_name, iters=1000):
@@ -305,14 +375,15 @@ def run_monte_carlo(tdf, strat_name, iters=1000):
         sim = np.random.choice(pnl_arr, size=n, replace=True)
         s_pnl = sim.sum()
         s_cum = sim.cumsum()
-        s_peaks = np.maximum.accumulate(s_cum)
-        s_dd = (s_cum - s_peaks).min()
+        s_equity = INITIAL_CAPITAL + s_cum
+        s_dd_usd = np.where(s_equity < INITIAL_CAPITAL, INITIAL_CAPITAL - s_equity, 0.0)
+        s_dd_pct = (s_dd_usd / INITIAL_CAPITAL * 100).max()
         
         std = sim.std()
         sh = (sim.mean() / std)*np.sqrt(365) if std > 0 else 0
         
         mc_finals.append(s_pnl)
-        mc_maxdd.append(abs(s_dd))
+        mc_maxdd.append(s_dd_pct)
         mc_sharpe.append(sh)
         
     mc_finals = np.array(mc_finals)
@@ -488,7 +559,12 @@ for s_name, res in store.items():
         'pnl_improvement_vs_baseline': pnl - store['00_Baseline']['kept']['pnl'].sum(),
         'win_rate_improvement_vs_baseline': (wins/tr*100) - base_wr if tr>0 else 0,
         'trades_per_day': tr/days_in_sim if days_in_sim>0 else 0,
-        'trades_per_hour': tr/hours_in_sim if hours_in_sim>0 else 0
+        'trades_per_hour': tr/hours_in_sim if hours_in_sim>0 else 0,
+        'direction_yes_trades': len(kept[kept['signal'] == 'YES']),
+        'direction_yes_pct': (len(kept[kept['signal'] == 'YES']) / tr * 100) if tr > 0 else 0,
+        'direction_no_trades': len(kept[kept['signal'] == 'NO']),
+        'direction_no_pct': (len(kept[kept['signal'] == 'NO']) / tr * 100) if tr > 0 else 0,
+        'total_fees': kept['fees'].sum() if 'fees' in kept.columns else 0
     })
     
     # 02, 03, 05
@@ -530,7 +606,9 @@ for s_name, res in store.items():
         'cagr': ((INITIAL_CAPITAL + pnl)/INITIAL_CAPITAL)**(365/days_in_sim)-1 if days_in_sim>0 else 0,
         'profit_per_hour_removed': pnl_imp/(base_trades-tr) if (base_trades-tr)>0 else 0,
         'profit_per_trade_removed': pnl_imp/(base_trades-tr) if (base_trades-tr)>0 else 0,
-        'incremental_sharpe': ((rm.get('sharpe_ratio',0) - r_metrics[0].get('sharpe_ratio',0)) / rem_pct) if rem_pct>0 else 0
+        'incremental_sharpe': ((rm.get('sharpe_ratio',0) - r_metrics[0].get('sharpe_ratio',0)) / rem_pct) if rem_pct>0 else 0,
+        'mar_ratio': (((INITIAL_CAPITAL + pnl)/INITIAL_CAPITAL)**(365/days_in_sim)-1) / (rm.get('max_drawdown_pct', 0) / 100) if rm.get('max_drawdown_pct', 0) > 0 else 999.0,
+        'drawdown_improvement_vs_baseline': r_metrics[0].get('max_drawdown_pct', 0) - rm.get('max_drawdown_pct', 0) if len(r_metrics)>0 else 0
     })
     
     # 07 - Drawdown
@@ -547,10 +625,16 @@ for s_name, res in store.items():
     
     # 09 - Slot Level Details Export
     s_slots = res['slots'].copy()
-    s_slots.to_csv(os.path.join(OUTPUT_DIR, f"09_slot_details_{s_name}.csv"), index=False)
+    try:
+        s_slots.to_csv(os.path.join(OUTPUT_DIR, f"09_slot_details_{s_name}.csv"), index=False)
+    except Exception as e:
+        print(f"      [!] Warning: Could not write 09_slot_details '{s_name}' ({e})")
     
     # 12 - Trades Export
-    res['full'].to_csv(os.path.join(OUTPUT_DIR, f"12_trades_{s_name}.csv"), index=False)
+    try:
+        res['full'].to_csv(os.path.join(OUTPUT_DIR, f"12_trades_{s_name}.csv"), index=False)
+    except Exception as e:
+        print(f"      [!] Warning: Could not write 12_trades '{s_name}' ({e})")
     
     # 14 - Stat Sig
     stat_metrics.append(stat_test(df_base, kept, s_name))

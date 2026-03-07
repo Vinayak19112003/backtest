@@ -192,14 +192,16 @@ def compute_full_metrics(tdf, label="Strategy"):
     m['total_return_pct'] = (m['final_capital'] - INITIAL_CAPITAL) / INITIAL_CAPITAL * 100
 
     # Drawdown
-    roll_max = daily_cap.cummax()
-    dd_usd = daily_cap - roll_max
-    dd_pct = (dd_usd / roll_max) * 100
-    m['max_dd_pct'] = dd_pct.min()
-    m['max_dd_usd'] = dd_usd.min()
-    m['avg_dd_pct'] = dd_pct[dd_pct < 0].mean() if (dd_pct < 0).any() else 0
+    dd_usd = pd.Series(0.0, index=daily_pnl.index)
+    underwater_mask = daily_cap < INITIAL_CAPITAL
+    dd_usd[underwater_mask] = INITIAL_CAPITAL - daily_cap[underwater_mask]
+    dd_pct = (dd_usd / INITIAL_CAPITAL) * 100
+    
+    m['max_dd_pct'] = dd_pct.max()
+    m['max_dd_usd'] = dd_usd.max()
+    m['avg_dd_pct'] = dd_pct[dd_pct > 0].mean() if (dd_pct > 0).any() else 0
 
-    is_dd = dd_pct < 0
+    is_dd = dd_pct > 0
     dd_groups = (~is_dd).cumsum()[is_dd]
     if not dd_groups.empty:
         dd_lens = dd_groups.groupby(dd_groups).apply(len)
@@ -218,7 +220,7 @@ def compute_full_metrics(tdf, label="Strategy"):
     m['sortino'] = (mean_daily / neg_std) * np.sqrt(365) if neg_std > 0 else 0
     cagr = ((daily_cap.iloc[-1] / INITIAL_CAPITAL) ** (1 / max(1/365, n_days/365)) - 1) * 100
     m['cagr'] = cagr
-    m['calmar'] = cagr / abs(m['max_dd_pct']) if m['max_dd_pct'] < 0 else 999
+    m['calmar'] = cagr / m['max_dd_pct'] if m['max_dd_pct'] > 0 else 999
 
     # Streaks
     winning_streaks = tdf['win'].groupby((~tdf['win']).cumsum()).sum()
@@ -342,8 +344,10 @@ q3_tdf_export.to_csv(os.path.join(OUTPUT_DIR, "q3_filter_trade_log.csv"))
 # Daily metrics
 daily_pnl_q3 = q3_tdf['pnl'].resample('1D').sum().fillna(0)
 daily_cap_q3 = INITIAL_CAPITAL + daily_pnl_q3.cumsum()
-daily_roll_max = daily_cap_q3.cummax()
-daily_dd_pct = ((daily_cap_q3 - daily_roll_max) / daily_roll_max * 100)
+dd_usd = pd.Series(0.0, index=daily_cap_q3.index)
+underwater_mask = daily_cap_q3 < INITIAL_CAPITAL
+dd_usd[underwater_mask] = INITIAL_CAPITAL - daily_cap_q3[underwater_mask]
+daily_dd_pct = (dd_usd / INITIAL_CAPITAL * 100)
 daily_trades = q3_tdf.resample('1D').size()
 daily_wr = q3_tdf.resample('1D')['win'].mean() * 100
 
@@ -394,31 +398,32 @@ hourly_grp.to_csv(os.path.join(OUTPUT_DIR, "q3_filter_hourly_metrics.csv"))
 
 # Drawdown analysis
 daily_cap_q3_series = daily_cap_q3
-roll_max_q3 = daily_cap_q3_series.cummax()
-dd_usd_q3 = daily_cap_q3_series - roll_max_q3
-dd_pct_q3 = (dd_usd_q3 / roll_max_q3 * 100)
+dd_usd_q3 = pd.Series(0.0, index=daily_cap_q3_series.index)
+underwater_mask = daily_cap_q3_series < INITIAL_CAPITAL
+dd_usd_q3[underwater_mask] = INITIAL_CAPITAL - daily_cap_q3_series[underwater_mask]
+dd_pct_q3 = (dd_usd_q3 / INITIAL_CAPITAL) * 100
 
 # Find individual drawdown events
-is_dd = dd_pct_q3 < 0
+is_dd = dd_pct_q3 > 0
 dd_groups = (~is_dd).cumsum()[is_dd]
 dd_events = []
 if not dd_groups.empty:
     for gid, group in dd_groups.groupby(dd_groups):
         start_date = group.index[0]
         end_date = group.index[-1]
-        depth = dd_pct_q3.loc[group.index].min()
+        depth = dd_pct_q3.loc[group.index].max()
         duration = len(group)
         dd_events.append({
             'start_date': start_date,
             'end_date': end_date,
             'depth_pct': depth,
-            'depth_usd': dd_usd_q3.loc[group.index].min(),
+            'depth_usd': dd_usd_q3.loc[group.index].max(),
             'duration_days': duration
         })
 
 dd_df = pd.DataFrame(dd_events)
 if len(dd_df) > 0:
-    dd_df = dd_df.sort_values('depth_pct').head(20)  # Top 20 worst drawdowns
+    dd_df = dd_df.sort_values('depth_pct', ascending=False).head(20)  # Top 20 worst drawdowns
 dd_df.to_csv(os.path.join(OUTPUT_DIR, "q3_filter_drawdown_analysis.csv"), index=False)
 
 # Regime analysis
@@ -501,8 +506,15 @@ with open(os.path.join(OUTPUT_DIR, "q3_filter_risk_metrics.json"), "w") as f:
 print("\n[6/6] Generating institutional summary report...")
 
 # Helper for comparison
-def delta_str(q3_val, base_val, fmt=".2f", higher_better=True):
+def delta_str(q3_val, base_val, fmt=".2f", higher_better=True, absolute_dd=False):
+    # Absolute drawdowns are stored as positive values now
     diff = q3_val - base_val
+    if absolute_dd:
+        # For drawdown, a negative difference means the drawdown got smaller (which is better)
+        arrow = "▼" if diff < 0 else "▲" if diff > 0 else "─"
+        quality = " (better)" if diff < 0 else " (worse)" if diff > 0 else ""
+        return f"{diff:+{fmt}} {arrow}{quality}"
+
     arrow = "▲" if diff > 0 else "▼" if diff < 0 else "─"
     quality = ""
     if diff != 0:
@@ -608,7 +620,7 @@ SECTION 2: PERFORMANCE METRICS
 2.3 DRAWDOWN ANALYSIS
 ────────────────────────────────────────────────────────────────────────
 
-  Maximum Drawdown:         {qm['max_dd_pct']:.1f}% (${qm['max_dd_usd']:.2f})
+  Maximum Drawdown:         {qm['max_dd_pct']:.1f}% (-${qm['max_dd_usd']:.2f})
   Average Drawdown:         {qm['avg_dd_pct']:.1f}%
   Max DD Duration:          {qm['max_dd_duration']} days
   Avg DD Duration:          {qm['avg_dd_duration']:.1f} days
@@ -670,8 +682,8 @@ Profit Factor             | {bm['profit_factor']:<14.2f} | {qm['profit_factor']:
 Sharpe Ratio              | {bm['sharpe']:<14.2f} | {qm['sharpe']:<14.2f} | {delta_str(qm['sharpe'], bm['sharpe'], '.2f')}
 Sortino Ratio             | {bm['sortino']:<14.2f} | {qm['sortino']:<14.2f} | {delta_str(qm['sortino'], bm['sortino'], '.2f')}
 Calmar Ratio              | {bm['calmar']:<14.2f} | {qm['calmar']:<14.2f} | {delta_str(qm['calmar'], bm['calmar'], '.2f')}
-Max Drawdown              | {bm['max_dd_pct']:<13.1f}% | {qm['max_dd_pct']:<13.1f}% | {delta_str(qm['max_dd_pct'], bm['max_dd_pct'], '.1f', False)}
-Avg Drawdown              | {bm['avg_dd_pct']:<13.1f}% | {qm['avg_dd_pct']:<13.1f}% | {delta_str(qm['avg_dd_pct'], bm['avg_dd_pct'], '.1f', False)}
+Max Drawdown              | {bm['max_dd_pct']:<13.1f}% | {qm['max_dd_pct']:<13.1f}% | {delta_str(qm['max_dd_pct'], bm['max_dd_pct'], '.1f', higher_better=False, absolute_dd=True)}
+Avg Drawdown              | {bm['avg_dd_pct']:<13.1f}% | {qm['avg_dd_pct']:<13.1f}% | {delta_str(qm['avg_dd_pct'], bm['avg_dd_pct'], '.1f', higher_better=False, absolute_dd=True)}
 Max DD Duration           | {bm['max_dd_duration']:<14} | {qm['max_dd_duration']:<14} | {delta_str(qm['max_dd_duration'], bm['max_dd_duration'], 'd', False)} days
 Max Win Streak            | {bm['max_win_streak']:<14} | {qm['max_win_streak']:<14} | {delta_str(qm['max_win_streak'], bm['max_win_streak'], 'd')}
 Max Loss Streak           | {bm['max_loss_streak']:<14} | {qm['max_loss_streak']:<14} | {delta_str(qm['max_loss_streak'], bm['max_loss_streak'], 'd', False)}
@@ -686,7 +698,7 @@ Worst Month               | ${bm['worst_month']:<13,.2f} | ${qm['worst_month']:<
   Win Rate Change:          {delta_str(qm['win_rate'], bm['win_rate'], '.2f')}%
   P&L Change:               {delta_str(qm['total_pnl'], bm['total_pnl'], ',.2f')}
   Sharpe Change:            {delta_str(qm['sharpe'], bm['sharpe'], '.2f')}
-  Max DD Change:            {delta_str(qm['max_dd_pct'], bm['max_dd_pct'], '.1f', False)}%
+  Max DD Change:            {delta_str(qm['max_dd_pct'], bm['max_dd_pct'], '.1f', higher_better=False, absolute_dd=True)}%
   Trade Frequency Change:   {delta_str(qm['total_trades']/qm['total_months'], bm['total_trades']/bm['total_months'], '.0f', False)} trades/month
 
 3.3 Q3-ONLY TRADE ANALYSIS (Trades That Were Removed)

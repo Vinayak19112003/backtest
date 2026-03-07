@@ -55,7 +55,7 @@ KEY RESULTS:
   Win Rate:                 55.65%
   Total P&L:                $3564.20
   Sharpe Ratio:             1.79
-  Max Drawdown:             9.95%
+  Max Drawdown:             25.94%
   Profit Factor:            1.21
 
 RATING: C
@@ -77,13 +77,13 @@ Basic Metrics:
 Trade Frequency:
   Average Trades/Day:          34.28
   Average Trades/Hour:         1.43
-  Busiest Day:                 N/A trades
-  Quietest Day:                N/A trades
+  Busiest Day:                 74 trades
+  Quietest Day:                5 trades
   Days with Zero Trades:       0 (0.00%)
 
 Signal Distribution:
-  Direction A (Long):          N/A trades (N/A%)
-  Direction B (Short):         N/A trades (N/A%)
+  Direction A (Long):          17586 trades (45.93%)
+  Direction B (Short):         20704 trades (54.07%)
   Directional Bias:            Balanced
 
 ────────────────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ P&L Summary:
   Total P&L:                   $3564.20
   Gross Profit:                $20883.80
   Gross Loss:                  -$17319.60
-  Net Trading Fees:            N/A
+  Net Trading Fees:            $765.80
   
 Return Metrics:
   Total Return:                +14.04%
@@ -119,30 +119,34 @@ Profit Distribution:
 
 2.3 RISK METRICS
 
-Drawdown Analysis:
-  Maximum Drawdown:            9.95% (-$25.94)
-  Max DD Peak Date:            N/A
-  Max DD Valley Date:          N/A
-  Max DD Duration:             15 days
+Drawdown Analysis (Peak-to-Valley / Initial Capital):
+  Maximum Drawdown:            25.94% (-$25.94)
+  Peak Equity Before DD:       $2242.06
+  Valley Equity at Max DD:     $2216.12
+  Max DD Date:                 nan
+  
+  Calculation Method:          Peak-to-Valley / Initial Capital
+  Initial Capital:             $100.00
+  DD Formula:                  (Peak - Valley) / $100 * 100
   
   Average Drawdown:            0.00%
   Average DD Duration:         0.00 days
-  Median Drawdown:             N/A
+  Median Drawdown:             3.68%
   
-  # of Drawdowns >5%:          N/A
-  # of Drawdowns >10%:         0
-  # of Drawdowns >20%:         0
+  # of Drawdowns >5%:          13403
+  # of Drawdowns >10%:         5027
+  # of Drawdowns >20%:         260
   
-Underwater Metrics:
-  Days Underwater:             N/A
-  Longest Underwater:          0 days
-  Current Status:              0.00% from high
+Underwater Metrics (from High Water Mark):
+  Days Below High Water Mark:  431
+  Longest Period Underwater:   0 days
+  Current Status:              0.00% from peak
   
 Streak Analysis:
   Longest Winning Streak:      18 trades
   Longest Losing Streak:       10 trades
-  Average Win Streak:          N/A trades
-  Average Loss Streak:         N/A trades
+  Average Win Streak:          2.21 trades
+  Average Loss Streak:         1.76 trades
 
 ────────────────────────────────────────────────────────────────────────
 
@@ -152,16 +156,16 @@ Performance Ratios:
   Sharpe Ratio:                1.79 (annualized)
   Sortino Ratio:               N/A
   Calmar Ratio:                137.40
-  MAR Ratio:                   N/A
+  MAR Ratio:                   8.65
   
   Profit Factor:               1.21 (Wins / Losses)
   Recovery Factor:             137.40 (Net P&L / Max DD)
   Payoff Ratio:                0.96 (Avg Win / Avg Loss)
   
 Volatility Metrics:
-  Daily P&L Std Dev:           N/A
-  Monthly P&L Std Dev:         N/A
-  Annualized Volatility:       N/A
+  Daily P&L Std Dev:           $5.45
+  Monthly P&L Std Dev:         $34.95
+  Annualized Volatility:       104.18%
 
 Risk/Return Profile:
   Return per Unit Risk:        1.79
@@ -251,8 +255,8 @@ SECTION 4: ROBUSTNESS ANALYSIS
 
 Win Rate Stability:
   3-Year Win Rate:             55.65%
-  First 50% of trades:         N/A
-  Last 50% of trades:          N/A
+  First 50% of trades:         56.55%
+  Last 50% of trades:          54.76%
   Conclusion:                  Stable
 
 ────────────────────────────────────────────────────────────────────────
@@ -287,32 +291,32 @@ SECTION 5: ADVANCED ANALYTICS
 5.1 MONTE CARLO SIMULATION (1,000 iterations)
 
 Expected P&L Distribution:
-  Mean Expected P&L:           $3570.33
-  Median Expected P&L:         $3570.20
-  Standard Deviation:          $191.05
+  Mean Expected P&L:           $3562.81
+  Median Expected P&L:         $3565.20
+  Standard Deviation:          $190.68
   
 Confidence Intervals:
-  95% CI Lower Bound:          $3220.15
-  95% CI Upper Bound:          $3944.35
+  95% CI Lower Bound:          $3198.10
+  95% CI Upper Bound:          $3944.25
   
-  5th Percentile (Worst 5%):   $3262.20
-  95th Percentile (Best 5%):   $3880.20
+  5th Percentile (Worst 5%):   $3265.70
+  95th Percentile (Best 5%):   $3874.30
 
 Risk Assessment:
   Probability of Profit:       100.00%
   Risk of Ruin (50% loss):     0.00%
-  Mean Max Drawdown:           37.25%
-  Worst Case Max DD:           93.50%
+  Mean Max Drawdown:           4.96%
+  Worst Case Max DD:           36.60%
 
 ────────────────────────────────────────────────────────────────────────
 
 5.2 TRADE SEQUENCING (Independence Test)
 
 Win-Loss Patterns:
-  Win-after-Win:               N/A
-  Loss-after-Loss:             N/A
-  Win-after-Loss:              N/A
-  Loss-after-Win:              N/A
+  Win-after-Win:               54.67%
+  Loss-after-Loss:             43.12%
+  Win-after-Loss:              56.88%
+  Loss-after-Win:              45.33%
   
   Conclusion:                  Assumed Independent
 
@@ -324,15 +328,15 @@ SECTION 6: RISK ASSESSMENT
 6.1 CAPITAL REQUIREMENTS
 
 Drawdown-Based Sizing:
-  Historical Max DD:           9.95%
-  Conservative Max DD:         14.93% (1.5x historical)
-  Extreme Stress DD:           19.90% (2x historical)
+  Historical Max DD:           25.94%
+  Conservative Max DD:         38.91% (1.5x historical)
+  Extreme Stress DD:           51.88% (2x historical)
 
 Recommended Capital:
   For $100/trade risk:
-    Minimum Capital:           $1004.94 (survive historical DD)
-    Conservative Capital:      $669.96
-    Safe Capital:              $502.47
+    Minimum Capital:           $385.51 (survive historical DD)
+    Conservative Capital:      $257.00
+    Safe Capital:              $192.75
 
 ────────────────────────────────────────────────────────────────────────
 
@@ -356,7 +360,7 @@ Performance vs Baseline:
   Win Rate Change:             +0.77 percentage points
   P&L Improvement:             +$438.82 (+14.04%)
   Sharpe Improvement:          0.06
-  Drawdown Change:             N/A
+  Drawdown Change:             +8.22 percentage points
   
 Trade Efficiency:
   Trades Removed:              1991 (4.94%)

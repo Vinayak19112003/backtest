@@ -207,13 +207,17 @@ for run in range(MC_RUNS):
     outcomes = np.where(np.random.random(total_trades) < win_rate, win_amount, loss_amount)
     cumulative = np.cumsum(outcomes)
     mc_final_pnl[run] = cumulative[-1]
-    running_max = np.maximum.accumulate(INITIAL_CAPITAL + cumulative)
-    dd_pct = ((INITIAL_CAPITAL + cumulative) - running_max) / running_max * 100
-    mc_max_dd[run] = dd_pct.min()
+    equity = INITIAL_CAPITAL + cumulative
+    dd_usd = np.where(equity < INITIAL_CAPITAL, INITIAL_CAPITAL - equity, 0.0)
+    dd_pct = (dd_usd / INITIAL_CAPITAL) * 100
+    mc_max_dd[run] = dd_pct.max()
 progress(MC_RUNS, MC_RUNS, "Complete")
 
 actual_pnl_rank = (mc_final_pnl < total_pnl).sum() / MC_RUNS * 100
-actual_dd_rank = (mc_max_dd < daily_cap.sub(daily_cap.cummax()).div(daily_cap.cummax()).mul(100).min()).sum() / MC_RUNS * 100
+dd_usd_actual = np.where(daily_cap < INITIAL_CAPITAL, INITIAL_CAPITAL - daily_cap, 0.0)
+dd_pct_actual = (dd_usd_actual / INITIAL_CAPITAL) * 100
+max_dd_actual = dd_pct_actual.max()
+actual_dd_rank = (mc_max_dd > max_dd_actual).sum() / MC_RUNS * 100
 mc_profitable = (mc_final_pnl > 0).sum() / MC_RUNS * 100
 
 sect2 = f"""═══════════════════════════════════════════════════════════════════════
@@ -527,9 +531,9 @@ cvar_95 = daily_pnl_arr[daily_pnl_arr <= var_95].mean() if (daily_pnl_arr <= var
 cvar_99 = daily_pnl_arr[daily_pnl_arr <= var_99].mean() if (daily_pnl_arr <= var_99).sum() > 0 else var_99
 
 # Max drawdown
-running_max = daily_cap.cummax()
-dd_pct = ((daily_cap - running_max) / running_max * 100)
-max_dd = dd_pct.min()
+dd_usd = np.where(daily_cap < INITIAL_CAPITAL, INITIAL_CAPITAL - daily_cap, 0.0)
+dd_pct = (dd_usd / INITIAL_CAPITAL) * 100
+max_dd = dd_pct.max()
 
 sect8 = f"""═══════════════════════════════════════════════════════════════════════
 VIII. TAIL RISK ANALYSIS
