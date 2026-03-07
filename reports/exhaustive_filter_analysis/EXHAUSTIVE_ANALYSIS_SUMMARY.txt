@@ -3,7 +3,7 @@ EXHAUSTIVE FILTER ANALYSIS — MASTER REPORT (11 REGIMES)
 ALGORITHMIC TRADING STRATEGY — ALPHA-BTC-15M-v2.0
 ═══════════════════════════════════════════════════════════════════════
 
-Generated: March 07, 2026 11:23:58
+Generated: March 07, 2026 11:29:46
 Baseline Reference: 40,281 trades | 54.88% Win Rate
 Modules Executed: 14 structural analytics sweeps
 
@@ -16,7 +16,7 @@ STRATEGY REGIMES SUMMARY
 PERFORMANCE  | WR:  54.88% (+ 0.00%) | P&L: $ 3125.38 | Trades/Day: 36.1
 RISK METRICS | Sharpe: 1.49 | Max DD: 34.16% | Profit Factor: 1.17
 REMOVAL IMPACT | Cut: 0.0% of trades | Efficiency Score: 0.000
-MONTE CARLO  | 95% CI Lower Bound: $2739.28 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $2735.38 | Risk of Ruin: 0.00%
 STRENGTHS    | Stable Drawdown Mitigation
 
 [01_Cut_Bottom_5_Pct]
@@ -24,7 +24,7 @@ STRENGTHS    | Stable Drawdown Mitigation
 PERFORMANCE  | WR:  55.65% (+ 0.77%) | P&L: $ 3564.20 | Trades/Day: 34.3
 RISK METRICS | Sharpe: 1.79 | Max DD: 25.94% | Profit Factor: 1.21
 REMOVAL IMPACT | Cut: 4.9% of trades | Efficiency Score: 0.157
-MONTE CARLO  | 95% CI Lower Bound: $3198.10 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3164.15 | Risk of Ruin: 0.00%
 STRENGTHS    | Stable Drawdown Mitigation
 
 [02_Cut_Bottom_10_Pct]
@@ -32,7 +32,7 @@ STRENGTHS    | Stable Drawdown Mitigation
 PERFORMANCE  | WR:  56.33% (+ 1.45%) | P&L: $ 3852.92 | Trades/Day: 32.4
 RISK METRICS | Sharpe: 2.05 | Max DD: 28.12% | Profit Factor: 1.24
 REMOVAL IMPACT | Cut: 10.2% of trades | Efficiency Score: 0.141
-MONTE CARLO  | 95% CI Lower Bound: $3486.87 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3476.92 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [03_Cut_Bottom_15_Pct]
@@ -40,7 +40,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  56.86% (+ 1.98%) | P&L: $ 4012.26 | Trades/Day: 30.7
 RISK METRICS | Sharpe: 2.26 | Max DD: 26.86% | Profit Factor: 1.27
 REMOVAL IMPACT | Cut: 15.0% of trades | Efficiency Score: 0.132
-MONTE CARLO  | 95% CI Lower Bound: $3655.96 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3664.16 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [04_Cut_Bottom_20_Pct]
@@ -48,7 +48,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  57.44% (+ 2.56%) | P&L: $ 4133.88 | Trades/Day: 28.7
 RISK METRICS | Sharpe: 2.49 | Max DD: 22.70% | Profit Factor: 1.30
 REMOVAL IMPACT | Cut: 20.3% of trades | Efficiency Score: 0.126
-MONTE CARLO  | 95% CI Lower Bound: $3791.83 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3783.78 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [05_Cut_Bottom_25_Pct]
@@ -56,7 +56,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  57.98% (+ 3.10%) | P&L: $ 4192.70 | Trades/Day: 26.9
 RISK METRICS | Sharpe: 2.70 | Max DD: 22.02% | Profit Factor: 1.33
 REMOVAL IMPACT | Cut: 25.5% of trades | Efficiency Score: 0.122
-MONTE CARLO  | 95% CI Lower Bound: $3862.60 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3882.40 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [06_Cut_WR_LT_50]
@@ -64,7 +64,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  57.73% (+ 2.85%) | P&L: $ 4172.78 | Trades/Day: 27.8
 RISK METRICS | Sharpe: 2.60 | Max DD: 21.64% | Profit Factor: 1.31
 REMOVAL IMPACT | Cut: 23.0% of trades | Efficiency Score: 0.124
-MONTE CARLO  | 95% CI Lower Bound: $3826.68 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3820.78 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [07_Cut_WR_LT_52]
@@ -72,7 +72,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  58.79% (+ 3.91%) | P&L: $ 4196.18 | Trades/Day: 24.1
 RISK METRICS | Sharpe: 3.02 | Max DD: 19.56% | Profit Factor: 1.37
 REMOVAL IMPACT | Cut: 33.1% of trades | Efficiency Score: 0.118
-MONTE CARLO  | 95% CI Lower Bound: $3874.13 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3858.03 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [08_Cut_WR_LT_54]
@@ -80,7 +80,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  60.28% (+ 5.40%) | P&L: $ 3976.62 | Trades/Day: 19.2
 RISK METRICS | Sharpe: 3.62 | Max DD: 21.40% | Profit Factor: 1.46
 REMOVAL IMPACT | Cut: 46.8% of trades | Efficiency Score: 0.115
-MONTE CARLO  | 95% CI Lower Bound: $3704.57 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $3682.57 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [09_Keep_Top_20_Pct]
@@ -88,7 +88,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  65.53% (+10.65%) | P&L: $ 2142.56 | Trades/Day: 6.6
 RISK METRICS | Sharpe: 5.84 | Max DD: 13.38% | Profit Factor: 1.83
 REMOVAL IMPACT | Cut: 81.7% of trades | Efficiency Score: 0.130
-MONTE CARLO  | 95% CI Lower Bound: $1986.51 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $1984.51 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 [10_Keep_Top_30_Pct]
@@ -96,7 +96,7 @@ STRENGTHS    | High Execution Predictability
 PERFORMANCE  | WR:  63.68% (+ 8.80%) | P&L: $ 2921.52 | Trades/Day: 10.3
 RISK METRICS | Sharpe: 5.04 | Max DD: 16.36% | Profit Factor: 1.68
 REMOVAL IMPACT | Cut: 71.4% of trades | Efficiency Score: 0.123
-MONTE CARLO  | 95% CI Lower Bound: $2725.52 | Risk of Ruin: 0.00%
+MONTE CARLO  | 95% CI Lower Bound: $2717.47 | Risk of Ruin: 0.00%
 STRENGTHS    | High Execution Predictability
 
 ═══════════════════════════════════════════════════════════════════════

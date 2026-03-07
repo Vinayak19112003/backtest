@@ -167,21 +167,30 @@ def calculate_risk_metrics(tdf, strat_name):
     
     longest_dd_days = 0
     curr_dd = 0
+    dd_durations_days = []
     for is_dd in in_dd:
         if is_dd:
             curr_dd += 1
             longest_dd_days = max(longest_dd_days, curr_dd)
         else:
+            if curr_dd > 0:
+                dd_durations_days.append(curr_dd)
             curr_dd = 0
+    if curr_dd > 0:
+        dd_durations_days.append(curr_dd)
+        
+    avg_dd_duration_days = np.mean(dd_durations_days) if dd_durations_days else 0
             
     is_hw = dd_pct == 0
     dd_groups = (~is_hw).cumsum()[~is_hw]
     if not dd_groups.empty:
         dd_max_per_event = dd_pct[~is_hw].groupby(dd_groups).max()
+        avg_drawdown_depth = dd_max_per_event.mean()
         dd_5_cnt = len(dd_max_per_event[dd_max_per_event > 5])
         dd_10_cnt = len(dd_max_per_event[dd_max_per_event > 10])
         dd_20_cnt = len(dd_max_per_event[dd_max_per_event > 20])
     else:
+        avg_drawdown_depth = 0
         dd_5_cnt, dd_10_cnt, dd_20_cnt = 0, 0, 0
         
     median_dd = dd_pct[dd_pct > 0].median() if len(dd_pct[dd_pct > 0]) > 0 else 0
@@ -231,6 +240,9 @@ def calculate_risk_metrics(tdf, strat_name):
         'valley_at_max_dd': valley_at_max_dd,
         'max_drawdown_start_date': max_dd_idx.strftime('%Y-%m-%d') if hasattr(max_dd_idx, 'strftime') else 'N/A',
         'longest_drawdown_duration_days': longest_dd_days,
+        'longest_flat_period_days': longest_dd_days,
+        'avg_drawdown_depth': avg_drawdown_depth,
+        'avg_drawdown_duration': avg_dd_duration_days,
         'max_consecutive_wins': w_streak,
         'max_consecutive_losses': l_streak,
         'avg_win_loss_ratio': awlr,

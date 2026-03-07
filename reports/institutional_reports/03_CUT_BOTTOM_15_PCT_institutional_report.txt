@@ -129,8 +129,8 @@ Drawdown Analysis (Peak-to-Valley / Initial Capital):
   Initial Capital:             $100.00
   DD Formula:                  (Peak - Valley) / $100 * 100
   
-  Average Drawdown:            0.00%
-  Average DD Duration:         0.00 days
+  Average Drawdown:            4.02%
+  Average DD Duration:         2.07 days
   Median Drawdown:             3.10%
   
   # of Drawdowns >5%:          8789
@@ -139,7 +139,7 @@ Drawdown Analysis (Peak-to-Valley / Initial Capital):
   
 Underwater Metrics (from High Water Mark):
   Days Below High Water Mark:  363
-  Longest Period Underwater:   0 days
+  Longest Period Underwater:   14 days
   Current Status:              0.00% from peak
   
 Streak Analysis:
@@ -291,22 +291,22 @@ SECTION 5: ADVANCED ANALYTICS
 5.1 MONTE CARLO SIMULATION (1,000 iterations)
 
 Expected P&L Distribution:
-  Mean Expected P&L:           $4012.27
-  Median Expected P&L:         $4015.26
-  Standard Deviation:          $177.96
+  Mean Expected P&L:           $4010.10
+  Median Expected P&L:         $4012.26
+  Standard Deviation:          $179.78
   
 Confidence Intervals:
-  95% CI Lower Bound:          $3655.96
-  95% CI Upper Bound:          $4348.36
+  95% CI Lower Bound:          $3664.16
+  95% CI Upper Bound:          $4356.26
   
-  5th Percentile (Worst 5%):   $3726.06
-  95th Percentile (Best 5%):   $4306.26
+  5th Percentile (Worst 5%):   $3722.26
+  95th Percentile (Best 5%):   $4304.36
 
 Risk Assessment:
   Probability of Profit:       100.00%
   Risk of Ruin (50% loss):     0.00%
-  Mean Max Drawdown:           3.71%
-  Worst Case Max DD:           40.18%
+  Mean Max Drawdown:           3.76%
+  Worst Case Max DD:           27.64%
 
 ────────────────────────────────────────────────────────────────────────
 
