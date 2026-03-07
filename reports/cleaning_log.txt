@@ -1,0 +1,207 @@
+DATA CLEANING LOG
+Generated: 2026-03-07 13:56:37 UTC
+Backtest: Polymarket 15m BTC UP/DOWN prediction
+
+ISSUES FIXED: 23
+
+DETAILED FIXES:
+File: reports/exhaustive_filter_analysis/02_risk_metrics.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/10_comparative_matrix.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_00_Baseline.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_01_Cut_Bottom_5_Pct.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_01_Cut_Bottom_5_Pct.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_02_Cut_Bottom_10_Pct.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_02_Cut_Bottom_10_Pct.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_03_Cut_Bottom_15_Pct.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_03_Cut_Bottom_15_Pct.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_04_Cut_Bottom_20_Pct.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_04_Cut_Bottom_20_Pct.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_05_Cut_Bottom_25_Pct.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_05_Cut_Bottom_25_Pct.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_06_Cut_WR_LT_50.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_06_Cut_WR_LT_50.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_07_Cut_WR_LT_52.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_07_Cut_WR_LT_52.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_08_Cut_WR_LT_54.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_08_Cut_WR_LT_54.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_09_Keep_Top_20_Pct.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_09_Keep_Top_20_Pct.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_10_Keep_Top_30_Pct.csv
+  Issue: NaN values in reason_filtered
+  Fix Applied: Filled text NaN with empty string to preserve CSV consistency.
+  Before: nan
+  After: 
+  Status: Fixed
+
+File: reports/exhaustive_filter_analysis/12_trades_10_Keep_Top_30_Pct.csv
+  Issue: Type normalization
+  Fix Applied: Applied standard formatting: integer counts, YYYY-MM-DD dates, 2-decimal percentages and currency fields.
+  Before: mixed
+  After: normalized
+  Status: Fixed
+
+File: reports/precision_temporal/full_hour_day_quarter_matrix.csv
+  Issue: Unreadable CSV
+  Fix Applied: Skipped file due parse error.
+  Before: Error tokenizing data. C error: Expected 1 fields in line 3, saw 13
+
+  After: Error tokenizing data. C error: Expected 1 fields in line 3, saw 13
+
+  Status: Cannot Fix
+
+File: reports/q3_filter/q3_filter_drawdown_analysis.csv
+  Issue: Unreadable CSV
+  Fix Applied: Skipped file due parse error.
+  Before: No columns to parse from file
+  After: No columns to parse from file
+  Status: Cannot Fix
+
+SUMMARY:
+- Successfully fixed: 23
+- Partially fixed: 0
+- Cannot fix: 2
+
+FILES UPDATED:
+- reports/exhaustive_filter_analysis/02_risk_metrics.csv
+- reports/exhaustive_filter_analysis/10_comparative_matrix.csv
+- reports/exhaustive_filter_analysis/12_trades_00_Baseline.csv
+- reports/exhaustive_filter_analysis/12_trades_01_Cut_Bottom_5_Pct.csv
+- reports/exhaustive_filter_analysis/12_trades_02_Cut_Bottom_10_Pct.csv
+- reports/exhaustive_filter_analysis/12_trades_03_Cut_Bottom_15_Pct.csv
+- reports/exhaustive_filter_analysis/12_trades_04_Cut_Bottom_20_Pct.csv
+- reports/exhaustive_filter_analysis/12_trades_05_Cut_Bottom_25_Pct.csv
+- reports/exhaustive_filter_analysis/12_trades_06_Cut_WR_LT_50.csv
+- reports/exhaustive_filter_analysis/12_trades_07_Cut_WR_LT_52.csv
+- reports/exhaustive_filter_analysis/12_trades_08_Cut_WR_LT_54.csv
+- reports/exhaustive_filter_analysis/12_trades_09_Keep_Top_20_Pct.csv
+- reports/exhaustive_filter_analysis/12_trades_10_Keep_Top_30_Pct.csv
+
+FILES WITH CANNOT FIX ITEMS:
+- reports/precision_temporal/full_hour_day_quarter_matrix.csv
+- reports/q3_filter/q3_filter_drawdown_analysis.csv
