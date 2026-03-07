@@ -35,7 +35,7 @@ STRATEGY OVERVIEW:
   Market:                   Binary prediction market (15-minute expiry)
   Strategy Type:            Systematic directional
   Holding Period:           15 minutes (single-candle)
-  Trading Frequency:        28.74 signals/day
+  Trading Frequency:        28.72 signals/day
   
 BACKTEST PARAMETERS:
   Test Period:              February 01, 2023 - February 22, 2026
@@ -54,11 +54,11 @@ KEY RESULTS:
   Total Trades:             32,106
   Win Rate:                 57.44%
   Total P&L:                $4133.88
-  Sharpe Ratio:             2.49
+  Sharpe Ratio:             14.92
   Max Drawdown:             22.70%
   Profit Factor:            1.30
 
-RATING: B
+RATING: A
 ────────────────────────────────────────────────────────────────────────
 
 SECTION 2: PERFORMANCE METRICS
@@ -75,7 +75,7 @@ Basic Metrics:
   Edge Over Random:            +7.44%
 
 Trade Frequency:
-  Average Trades/Day:          28.74
+  Average Trades/Day:          28.72
   Average Trades/Hour:         1.20
   Busiest Day:                 63 trades
   Quietest Day:                3 trades
@@ -98,7 +98,7 @@ P&L Summary:
   
 Return Metrics:
   Total Return:                +32.27%
-  CAGR (Annualized):           240.07%
+  CAGR (Annualized):           240.04%
   Monthly Return (Avg):        100.00% WR
   Daily Return (Avg):          0.00%
   Expectancy per Trade:        $0.13
@@ -123,7 +123,7 @@ Drawdown Analysis (Peak-to-Valley / Initial Capital):
   Maximum Drawdown:            22.70% (-$22.70)
   Peak Equity Before DD:       $3114.48
   Valley Equity at Max DD:     $3091.78
-  Max DD Date:                 nan
+  Max DD Date:                 2025-03-19
   
   Calculation Method:          Peak-to-Valley / Initial Capital
   Initial Capital:             $100.00
@@ -153,9 +153,9 @@ Streak Analysis:
 2.4 RISK-ADJUSTED RETURNS
 
 Performance Ratios:
-  Sharpe Ratio:                2.49 (annualized)
-  Sortino Ratio:               5539007892663781.00
-  Calmar Ratio:                182.11
+  Sharpe Ratio:                14.92 (annualized)
+  Sortino Ratio:               17.67
+  Calmar Ratio:                10.57
   MAR Ratio:                   10.58
   
   Profit Factor:               1.30 (Wins / Losses)
@@ -168,7 +168,7 @@ Volatility Metrics:
   Annualized Volatility:       95.67%
 
 Risk/Return Profile:
-  Return per Unit Risk:        2.49
+  Return per Unit Risk:        14.92
   Return per Unit DD:          182.11
 
 ────────────────────────────────────────────────────────────────────────
@@ -291,22 +291,22 @@ SECTION 5: ADVANCED ANALYTICS
 5.1 MONTE CARLO SIMULATION (1,000 iterations)
 
 Expected P&L Distribution:
-  Mean Expected P&L:           $4137.49
-  Median Expected P&L:         $4139.88
-  Standard Deviation:          $179.32
+  Mean Expected P&L:           $4143.56
+  Median Expected P&L:         $4151.88
+  Standard Deviation:          $181.28
   
 Confidence Intervals:
-  95% CI Lower Bound:          $3783.78
-  95% CI Upper Bound:          $4489.98
+  95% CI Lower Bound:          $3783.88
+  95% CI Upper Bound:          $4485.88
   
-  5th Percentile (Worst 5%):   $3835.88
-  95th Percentile (Best 5%):   $4427.88
+  5th Percentile (Worst 5%):   $3839.88
+  95th Percentile (Best 5%):   $4436.08
 
 Risk Assessment:
   Probability of Profit:       100.00%
   Risk of Ruin (50% loss):     0.00%
-  Mean Max Drawdown:           3.14%
-  Worst Case Max DD:           23.16%
+  Mean Max Drawdown:           3.43%
+  Worst Case Max DD:           27.86%
 
 ────────────────────────────────────────────────────────────────────────
 
@@ -375,7 +375,7 @@ SECTION 8: FINAL ASSESSMENT
 
 QUANTITATIVE EVALUATION:
 
-Performance Grade:             B
+Performance Grade:             A
   
 Institutional Readiness Checklist:
   [✓] Statistically significant edge (p < 0.05)
@@ -399,7 +399,7 @@ WEAKNESSES:
   • Capital intensive during drawdown recovery phases
   • Narrow profit margins post fees requiring scale execution
 
-VERDICT: BUY
+VERDICT: STRONG BUY
          for live deployment
 
 Confidence Level: HIGH

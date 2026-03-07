@@ -35,7 +35,7 @@ STRATEGY OVERVIEW:
   Market:                   Binary prediction market (15-minute expiry)
   Strategy Type:            Systematic directional
   Holding Period:           15 minutes (single-candle)
-  Trading Frequency:        36.06 signals/day
+  Trading Frequency:        36.03 signals/day
   
 BACKTEST PARAMETERS:
   Test Period:              February 01, 2023 - February 22, 2026
@@ -54,11 +54,11 @@ KEY RESULTS:
   Total Trades:             40,281
   Win Rate:                 54.88%
   Total P&L:                $3125.38
-  Sharpe Ratio:             1.49
+  Sharpe Ratio:             9.89
   Max Drawdown:             34.16%
   Profit Factor:            1.17
 
-RATING: D
+RATING: B
 ────────────────────────────────────────────────────────────────────────
 
 SECTION 2: PERFORMANCE METRICS
@@ -75,7 +75,7 @@ Basic Metrics:
   Edge Over Random:            +4.88%
 
 Trade Frequency:
-  Average Trades/Day:          36.06
+  Average Trades/Day:          36.03
   Average Trades/Hour:         1.50
   Busiest Day:                 80 trades
   Quietest Day:                5 trades
@@ -98,7 +98,7 @@ P&L Summary:
   
 Return Metrics:
   Total Return:                +0.00%
-  CAGR (Annualized):           211.14%
+  CAGR (Annualized):           211.09%
   Monthly Return (Avg):        100.00% WR
   Daily Return (Avg):          0.00%
   Expectancy per Trade:        $0.08
@@ -123,7 +123,7 @@ Drawdown Analysis (Peak-to-Valley / Initial Capital):
   Maximum Drawdown:            34.16% (-$34.16)
   Peak Equity Before DD:       $2389.38
   Valley Equity at Max DD:     $2355.22
-  Max DD Date:                 nan
+  Max DD Date:                 2025-03-30
   
   Calculation Method:          Peak-to-Valley / Initial Capital
   Initial Capital:             $100.00
@@ -153,9 +153,9 @@ Streak Analysis:
 2.4 RISK-ADJUSTED RETURNS
 
 Performance Ratios:
-  Sharpe Ratio:                1.49 (annualized)
-  Sortino Ratio:               6675700495735465.00
-  Calmar Ratio:                91.49
+  Sharpe Ratio:                9.89 (annualized)
+  Sortino Ratio:               12.15
+  Calmar Ratio:                6.18
   MAR Ratio:                   6.18
   
   Profit Factor:               1.17 (Wins / Losses)
@@ -168,7 +168,7 @@ Volatility Metrics:
   Annualized Volatility:       108.00%
 
 Risk/Return Profile:
-  Return per Unit Risk:        1.49
+  Return per Unit Risk:        9.89
   Return per Unit DD:          91.49
 
 ────────────────────────────────────────────────────────────────────────
@@ -291,22 +291,22 @@ SECTION 5: ADVANCED ANALYTICS
 5.1 MONTE CARLO SIMULATION (1,000 iterations)
 
 Expected P&L Distribution:
-  Mean Expected P&L:           $3125.46
-  Median Expected P&L:         $3121.38
-  Standard Deviation:          $196.85
+  Mean Expected P&L:           $3124.49
+  Median Expected P&L:         $3124.38
+  Standard Deviation:          $207.95
   
 Confidence Intervals:
-  95% CI Lower Bound:          $2735.38
-  95% CI Upper Bound:          $3517.43
+  95% CI Lower Bound:          $2703.33
+  95% CI Upper Bound:          $3547.43
   
-  5th Percentile (Worst 5%):   $2811.28
-  95th Percentile (Best 5%):   $3445.38
+  5th Percentile (Worst 5%):   $2797.18
+  95th Percentile (Best 5%):   $3479.58
 
 Risk Assessment:
   Probability of Profit:       100.00%
   Risk of Ruin (50% loss):     0.00%
-  Mean Max Drawdown:           6.04%
-  Worst Case Max DD:           57.62%
+  Mean Max Drawdown:           5.98%
+  Worst Case Max DD:           40.52%
 
 ────────────────────────────────────────────────────────────────────────
 
@@ -375,11 +375,11 @@ SECTION 8: FINAL ASSESSMENT
 
 QUANTITATIVE EVALUATION:
 
-Performance Grade:             D
+Performance Grade:             B
   
 Institutional Readiness Checklist:
   [✗] Statistically significant edge (p < 0.05)
-  [✗] Positive Sharpe ratio (>1.5)
+  [✓] Positive Sharpe ratio (>1.5)
   [✓] Acceptable drawdown (<35%)
   [✓] Sufficient sample size (>5000 trades)
   [✓] Consistent across years
@@ -387,7 +387,7 @@ Institutional Readiness Checklist:
   [✓] Positive expectancy
   [✓] Proper risk management possible
   
-  Readiness Score:             6/8 checks passed
+  Readiness Score:             7/8 checks passed
 
 STRENGTHS:
   • Exceptionally high baseline accuracy bounds for binary markets
@@ -399,8 +399,8 @@ WEAKNESSES:
   • Capital intensive during drawdown recovery phases
   • Narrow profit margins post fees requiring scale execution
 
-VERDICT: AVOID
-         not recommended
+VERDICT: BUY
+         for live deployment
 
 Confidence Level: LOW
 
