@@ -35,7 +35,7 @@ STRATEGY OVERVIEW:
   Market:                   Binary prediction market (15-minute expiry)
   Strategy Type:            Systematic directional
   Holding Period:           15 minutes (single-candle)
-  Trading Frequency:        10.32 signals/day
+  Trading Frequency:        10.31 signals/day
   
 BACKTEST PARAMETERS:
   Test Period:              February 01, 2023 - February 22, 2026
@@ -54,7 +54,7 @@ KEY RESULTS:
   Total Trades:             11,524
   Win Rate:                 63.68%
   Total P&L:                $2921.52
-  Sharpe Ratio:             5.04
+  Sharpe Ratio:             30.92
   Max Drawdown:             16.36%
   Profit Factor:            1.68
 
@@ -75,7 +75,7 @@ Basic Metrics:
   Edge Over Random:            +13.68%
 
 Trade Frequency:
-  Average Trades/Day:          10.32
+  Average Trades/Day:          10.31
   Average Trades/Hour:         0.43
   Busiest Day:                 34 trades
   Quietest Day:                0 trades
@@ -123,7 +123,7 @@ Drawdown Analysis (Peak-to-Valley / Initial Capital):
   Maximum Drawdown:            16.36% (-$16.36)
   Peak Equity Before DD:       $1619.38
   Valley Equity at Max DD:     $1603.02
-  Max DD Date:                 nan
+  Max DD Date:                 2024-08-29
   
   Calculation Method:          Peak-to-Valley / Initial Capital
   Initial Capital:             $100.00
@@ -153,9 +153,9 @@ Streak Analysis:
 2.4 RISK-ADJUSTED RETURNS
 
 Performance Ratios:
-  Sharpe Ratio:                5.04 (annualized)
-  Sortino Ratio:               21810214661794420.00
-  Calmar Ratio:                178.58
+  Sharpe Ratio:                30.92 (annualized)
+  Sortino Ratio:               37.36
+  Calmar Ratio:                12.50
   MAR Ratio:                   12.50
   
   Profit Factor:               1.68 (Wins / Losses)
@@ -168,7 +168,7 @@ Volatility Metrics:
   Annualized Volatility:       61.15%
 
 Risk/Return Profile:
-  Return per Unit Risk:        5.04
+  Return per Unit Risk:        30.92
   Return per Unit DD:          178.58
 
 ────────────────────────────────────────────────────────────────────────
@@ -291,22 +291,22 @@ SECTION 5: ADVANCED ANALYTICS
 5.1 MONTE CARLO SIMULATION (1,000 iterations)
 
 Expected P&L Distribution:
-  Mean Expected P&L:           $2919.46
-  Median Expected P&L:         $2921.52
-  Standard Deviation:          $103.13
+  Mean Expected P&L:           $2924.66
+  Median Expected P&L:         $2925.52
+  Standard Deviation:          $106.32
   
 Confidence Intervals:
-  95% CI Lower Bound:          $2717.47
-  95% CI Upper Bound:          $3131.52
+  95% CI Lower Bound:          $2711.52
+  95% CI Upper Bound:          $3123.67
   
-  5th Percentile (Worst 5%):   $2751.42
-  95th Percentile (Best 5%):   $3095.52
+  5th Percentile (Worst 5%):   $2743.52
+  95th Percentile (Best 5%):   $3089.62
 
 Risk Assessment:
   Probability of Profit:       100.00%
   Risk of Ruin (50% loss):     0.00%
-  Mean Max Drawdown:           1.45%
-  Worst Case Max DD:           16.18%
+  Mean Max Drawdown:           1.52%
+  Worst Case Max DD:           15.94%
 
 ────────────────────────────────────────────────────────────────────────
 

@@ -35,7 +35,7 @@ STRATEGY OVERVIEW:
   Market:                   Binary prediction market (15-minute expiry)
   Strategy Type:            Systematic directional
   Holding Period:           15 minutes (single-candle)
-  Trading Frequency:        27.76 signals/day
+  Trading Frequency:        27.74 signals/day
   
 BACKTEST PARAMETERS:
   Test Period:              February 01, 2023 - February 22, 2026
@@ -54,7 +54,7 @@ KEY RESULTS:
   Total Trades:             31,011
   Win Rate:                 57.73%
   Total P&L:                $4172.78
-  Sharpe Ratio:             2.60
+  Sharpe Ratio:             15.41
   Max Drawdown:             21.64%
   Profit Factor:            1.31
 
@@ -75,7 +75,7 @@ Basic Metrics:
   Edge Over Random:            +7.73%
 
 Trade Frequency:
-  Average Trades/Day:          27.76
+  Average Trades/Day:          27.74
   Average Trades/Hour:         1.16
   Busiest Day:                 61 trades
   Quietest Day:                3 trades
@@ -98,7 +98,7 @@ P&L Summary:
   
 Return Metrics:
   Total Return:                +33.51%
-  CAGR (Annualized):           241.09%
+  CAGR (Annualized):           241.06%
   Monthly Return (Avg):        100.00% WR
   Daily Return (Avg):          0.00%
   Expectancy per Trade:        $0.13
@@ -123,7 +123,7 @@ Drawdown Analysis (Peak-to-Valley / Initial Capital):
   Maximum Drawdown:            21.64% (-$21.64)
   Peak Equity Before DD:       $3124.26
   Valley Equity at Max DD:     $3102.62
-  Max DD Date:                 nan
+  Max DD Date:                 2025-03-19
   
   Calculation Method:          Peak-to-Valley / Initial Capital
   Initial Capital:             $100.00
@@ -153,9 +153,9 @@ Streak Analysis:
 2.4 RISK-ADJUSTED RETURNS
 
 Performance Ratios:
-  Sharpe Ratio:                2.60 (annualized)
-  Sortino Ratio:               5788544320884931.00
-  Calmar Ratio:                192.83
+  Sharpe Ratio:                15.41 (annualized)
+  Sortino Ratio:               18.22
+  Calmar Ratio:                11.14
   MAR Ratio:                   11.14
   
   Profit Factor:               1.31 (Wins / Losses)
@@ -168,7 +168,7 @@ Volatility Metrics:
   Annualized Volatility:       93.84%
 
 Risk/Return Profile:
-  Return per Unit Risk:        2.60
+  Return per Unit Risk:        15.41
   Return per Unit DD:          192.83
 
 ────────────────────────────────────────────────────────────────────────
@@ -291,22 +291,22 @@ SECTION 5: ADVANCED ANALYTICS
 5.1 MONTE CARLO SIMULATION (1,000 iterations)
 
 Expected P&L Distribution:
-  Mean Expected P&L:           $4164.77
-  Median Expected P&L:         $4160.78
-  Standard Deviation:          $175.80
+  Mean Expected P&L:           $4176.01
+  Median Expected P&L:         $4184.78
+  Standard Deviation:          $172.88
   
 Confidence Intervals:
-  95% CI Lower Bound:          $3820.78
-  95% CI Upper Bound:          $4516.78
+  95% CI Lower Bound:          $3822.78
+  95% CI Upper Bound:          $4500.83
   
-  5th Percentile (Worst 5%):   $3888.48
-  95th Percentile (Best 5%):   $4456.78
+  5th Percentile (Worst 5%):   $3880.78
+  95th Percentile (Best 5%):   $4456.88
 
 Risk Assessment:
   Probability of Profit:       100.00%
   Risk of Ruin (50% loss):     0.00%
-  Mean Max Drawdown:           2.99%
-  Worst Case Max DD:           25.04%
+  Mean Max Drawdown:           3.28%
+  Worst Case Max DD:           22.46%
 
 ────────────────────────────────────────────────────────────────────────
 

@@ -54,7 +54,7 @@ KEY RESULTS:
   Total Trades:             7,372
   Win Rate:                 65.53%
   Total P&L:                $2142.56
-  Sharpe Ratio:             5.84
+  Sharpe Ratio:             37.14
   Max Drawdown:             13.38%
   Profit Factor:            1.83
 
@@ -123,7 +123,7 @@ Drawdown Analysis (Peak-to-Valley / Initial Capital):
   Maximum Drawdown:            13.38% (-$13.38)
   Peak Equity Before DD:       $1877.28
   Valley Equity at Max DD:     $1863.90
-  Max DD Date:                 nan
+  Max DD Date:                 2025-09-03
   
   Calculation Method:          Peak-to-Valley / Initial Capital
   Initial Capital:             $100.00
@@ -153,9 +153,9 @@ Streak Analysis:
 2.4 RISK-ADJUSTED RETURNS
 
 Performance Ratios:
-  Sharpe Ratio:                5.84 (annualized)
-  Sortino Ratio:               25001634314249008.00
-  Calmar Ratio:                160.13
+  Sharpe Ratio:                37.14 (annualized)
+  Sortino Ratio:               46.52
+  Calmar Ratio:                13.18
   MAR Ratio:                   13.18
   
   Profit Factor:               1.83 (Wins / Losses)
@@ -168,7 +168,7 @@ Volatility Metrics:
   Annualized Volatility:       49.87%
 
 Risk/Return Profile:
-  Return per Unit Risk:        5.84
+  Return per Unit Risk:        37.14
   Return per Unit DD:          160.13
 
 ────────────────────────────────────────────────────────────────────────
@@ -291,22 +291,22 @@ SECTION 5: ADVANCED ANALYTICS
 5.1 MONTE CARLO SIMULATION (1,000 iterations)
 
 Expected P&L Distribution:
-  Mean Expected P&L:           $2143.85
-  Median Expected P&L:         $2142.56
-  Standard Deviation:          $83.76
+  Mean Expected P&L:           $2142.08
+  Median Expected P&L:         $2144.56
+  Standard Deviation:          $81.77
   
 Confidence Intervals:
-  95% CI Lower Bound:          $1984.51
-  95% CI Upper Bound:          $2298.56
+  95% CI Lower Bound:          $1978.51
+  95% CI Upper Bound:          $2310.56
   
-  5th Percentile (Worst 5%):   $2006.46
-  95th Percentile (Best 5%):   $2278.66
+  5th Percentile (Worst 5%):   $2010.46
+  95th Percentile (Best 5%):   $2280.56
 
 Risk Assessment:
   Probability of Profit:       100.00%
   Risk of Ruin (50% loss):     0.00%
-  Mean Max Drawdown:           1.20%
-  Worst Case Max DD:           11.38%
+  Mean Max Drawdown:           1.23%
+  Worst Case Max DD:           11.54%
 
 ────────────────────────────────────────────────────────────────────────
 
